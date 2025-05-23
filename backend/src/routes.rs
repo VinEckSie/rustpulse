@@ -1,7 +1,7 @@
 pub mod health;
 
-use axum::{Router, routing::get, response::Html};
 use crate::routes::health::health_check;
+use axum::{Router, response::Html, routing::get};
 
 pub fn create_router() -> Router {
     Router::new()

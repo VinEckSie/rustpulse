@@ -6,7 +6,6 @@ use tracing::Level;
 use tracing_appender::rolling;
 use tracing_subscriber::{EnvFilter, fmt};
 
-
 #[tokio::main]
 async fn main() {
     dotenvy::dotenv().ok();
@@ -33,14 +32,12 @@ async fn main() {
         subscriber.compact().init();
     }
 
-
     let app = create_router().layer(
         TraceLayer::new_for_http()
             .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
             .on_response(DefaultOnResponse::new().level(Level::INFO))
             .on_request(DefaultOnRequest::new().level(Level::INFO)),
     );
-    
 
     let listener = tokio::net::TcpListener::bind("127.0.0.1:3000")
         .await
@@ -51,4 +48,3 @@ async fn main() {
     //Listener handles network → Router handles logic
     axum::serve(listener, app).await.unwrap();
 }
-
