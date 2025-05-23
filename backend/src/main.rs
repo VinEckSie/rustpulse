@@ -1,6 +1,6 @@
 mod routes;
 
-use crate::routes::{create_router, health::health_check};
+use crate::routes::create_router;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
 use tracing_appender::rolling;

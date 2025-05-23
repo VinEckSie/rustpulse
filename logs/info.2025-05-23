@@ -20,3 +20,9 @@
 2025-05-23T13:44:09.114365Z  INFO request: started processing request method=GET uri=/ version=HTTP/1.1
 2025-05-23T13:44:09.115035Z  INFO request: 🚀 RustPulse started on http://localhost:3000 method=GET uri=/ version=HTTP/1.1
 2025-05-23T13:44:09.115102Z  INFO request: finished processing request latency=0 ms status=200 method=GET uri=/ version=HTTP/1.1
+2025-05-23T17:21:20.803367Z TRACE connection 127.0.0.1:50899 accepted
+2025-05-23T17:21:20.804426Z  INFO request: started processing request method=GET uri=/health version=HTTP/1.1
+2025-05-23T17:21:20.804529Z  INFO request: finished processing request latency=0 ms status=200 method=GET uri=/health version=HTTP/1.1
+2025-05-23T17:21:23.637357Z  INFO request: started processing request method=GET uri=/ version=HTTP/1.1
+2025-05-23T17:21:23.637458Z  INFO request: 🚀 RustPulse started on http://localhost:3000 method=GET uri=/ version=HTTP/1.1
+2025-05-23T17:21:23.637516Z  INFO request: finished processing request latency=0 ms status=200 method=GET uri=/ version=HTTP/1.1
