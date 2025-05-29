@@ -1,3 +1,4 @@
+mod domain;
 mod routes;
 
 use crate::routes::create_router;

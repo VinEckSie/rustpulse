@@ -37,8 +37,17 @@ check:
     just test
     just audit
 
+fmt-check:
+    cargo fmt --check || true
 
-#cargo watch -s "just check" --ignore coverage --ignore target --ignore docs
+
+# Automatically rerun all checks on file change
+watch-dev:
+    cargo watch -s "just fmt-check && just test" --ignore coverage --ignore target --ignore docs
+
+watch-ci:
+    cargo watch -d 3 -s "just check" --ignore coverage --ignore target --ignore docs
+
 
 
 

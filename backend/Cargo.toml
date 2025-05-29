@@ -15,6 +15,7 @@ serde_json = "1.0.140"
 anyhow = "1.0.98"
 thiserror = "2.0.12"
 tower-http = { version = "0.6.4", features = ["trace"] }
+uuid = "1.17.0"
 
 [package.metadata.cargo-machete]
 ignored = ["serde_json", "serde", "thiserror",  "anyhow"]
