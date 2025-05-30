@@ -11,17 +11,18 @@ Create a fully modular, production-grade Rust backend that provides real-time sy
 
 ## 🧱 Tech Stack Overview
 | Layer              | Tech                                        | Purpose                                 |
-|-------------------|---------------------------------------------|-----------------------------------------|
-| Web API           | Axum                                        | Async REST framework                     |
-| GraphQL API       | async-graphql                               | Flexible frontend queries                |
-| Database          | PostgreSQL + SQLx + SeaORM                  | Storage with ORM and raw query power     |
-| Auth              | JWT + OAuth2                                | Secure login and RBAC                    |
-| Observability     | tracing + OpenTelemetry + Prometheus        | Logs and metrics                         |
-| DevOps            | GitHub Actions, Docker, Kubernetes          | CI/CD and production deployment          |
-| Architecture      | Hexagonal (Ports & Adapters)                | Clean layering and maintainability       |
-| Frontend (optional)| Tauri + Plotters                           | Optional graphical UI for metrics        |
+|-------------------|---------------------------------------------|----------------------------------------------|
+| Web API           | Axum + Tokio                                | Async REST framework                         |
+| GraphQL API       | async-graphql                               | Flexible frontend queries                    |
+| Database          | PostgreSQL + SQLx                           | Compile-time safe SQL and real-world backend |
+| Auth              | JWT + OAuth2                                | Secure login and RBAC                        |
+| Observability     | tracing + OpenTelemetry + Prometheus        | Logs and metrics                             |
+| DevOps            | GitHub Actions, Docker, Kubernetes          | CI/CD and production deployment              |
+| Architecture      | Hexagonal (Ports & Adapters)                | Clean layering and maintainability           |
+| Frontend (optional)| Tauri + Plotters                           | Optional graphical UI for metrics            |
 
 ---
+
 
 ## 📁 Directory Layout (Hexagonal Architecture)
 ```
