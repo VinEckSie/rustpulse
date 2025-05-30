@@ -18,6 +18,7 @@
 
 use std::net::IpAddr;
 use uuid::{Timestamp, Uuid};
+use chrono::{DateTime, Utc, Duration};
 
 enum ServerType {
     Virtual,
@@ -38,19 +39,19 @@ pub struct Server {
     status: ServerStatus,
     tags: Vec<String>,
     location: Option<String>,
-    last_heartbeat: Timestamp,
+    last_heartbeat: DateTime<Utc>,
 }
 
 pub struct Metric {
     id: Uuid,
     server_id: Uuid,
-    cpu: usize,
-    ram: usize,
-    timestamp: Timestamp,
+    cpu: f64,
+    ram: f64,
+    timestamp: DateTime<Utc>,
     connected_users: u16,
-    network_usage: usize,
-    disk_usage: usize,
-    uptime: Timestamp,
+    network_usage: f64,
+    disk_usage: f64,
+    uptime: Duration,
     errors_detected: Option<Vec<String>>,
     anomaly: bool,
 }

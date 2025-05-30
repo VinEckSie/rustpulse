@@ -16,6 +16,8 @@ anyhow = "1.0.98"
 thiserror = "2.0.12"
 tower-http = { version = "0.6.4", features = ["trace"] }
 uuid = "1.17.0"
+chrono = "0.4.41"
+sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid"] }
 
 [package.metadata.cargo-machete]
 ignored = ["serde_json", "serde", "thiserror",  "anyhow"]
