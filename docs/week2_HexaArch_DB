@@ -1,0 +1,21 @@
+## 📅 Week 2 Progress – Domain & Database Setup
+
+**✅ Goals this week:**
+- [x] Define core domain models: `Server` and `Metric`
+- [x] Load `.env` file with `dotenvy`
+- [x] Set up PostgreSQL connection with `sqlx`
+- [x] Configure structured logging using `tracing` and `tower_http`
+- [ ] Create and connect to `rustpulse` database
+- [ ] Implement SQL migrations and DB schema
+
+**🔧 Stack involved:**
+- `sqlx` with PostgreSQL (async database connection)
+- `dotenvy` for environment config loading
+- `tracing` + `tower_http` for structured HTTP logging
+- `uuid` + `chrono` for typed model fields
+
+**📝 Notes:**
+The PostgreSQL database is not fully created yet.  
+Next steps include:
+- Creating the `rustpulse` database manually or via migration
+- Defining and running the initial schema using `sqlx migrate`
