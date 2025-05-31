@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  db:
+    image: postgres:16
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: rustpulse_test
+    ports:
+      - "5433:5432"
+
+
+#docker-compose -f docker-compose.test.yml up -d

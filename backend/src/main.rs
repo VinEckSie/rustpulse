@@ -18,6 +18,41 @@ impl MySqlPool {
 
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
+
+    // struct Config {
+    //     database_url: String,
+    //     port: u16,
+    // }
+    // 
+    // impl Config {
+    //     fn from_env() -> Self {
+    //         // read from env vars here
+    //     }
+    // }
+
+    //config test example
+    // #[test]
+    // fn missing_database_url_returns_error() {
+    //     std::env::remove_var("DATABASE_URL");
+    //     assert!(Config::from_env().is_err());
+    // }
+
+    //DB tests example
+    // #[tokio::test]
+    // async fn store_event_returns_201() {
+    //     let app = spawn_app();
+    //     let payload = json!({"title": "RustConf", "date": "2025-09-10"});
+    // 
+    //     let response = app.post("/events").json(&payload).send().await.unwrap();
+    // 
+    //     assert_eq!(response.status(), 201);
+    // }
+
+
+    //let config = Config::from_env().expect("Failed to load config");
+    // pass it to Axum or DB setup
+    
+    
     //Load envs
     dotenvy::dotenv().ok();
     // 
