@@ -1,3 +1,11 @@
+- A README should include:
+    - 🔹 **Project Overview**
+    - 🔹 **Tech Stack**
+    - 🔹 **Installation Guide** (Step-by-step Docker setup)
+    - 🔹 **How to Use** (API endpoints, example requests)
+    - 🔹 **Live Demo Link** (if deployed)
+
+
 🧾 GitHub README → Technical, concise, action-oriented
 🎯 Audience: developers, contributors, recruiters scanning for skills
 ✅ Must include:
