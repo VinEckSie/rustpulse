@@ -28,6 +28,13 @@ RustPulse is a modular, production-ready telemetry monitoring system written ent
 
 ---
 
+## 🌐 Live Demo
+
+🚧 Coming soon – Will be available at:  
+👉 [https://demo.rustpulse.io](https://demo.rustpulse.io)
+
+---
+
 ## 🧱 Tech Stack
 
 | Component                | Technology (Rust-Only)           | Purpose                                         |
