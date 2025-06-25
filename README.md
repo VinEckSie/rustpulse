@@ -1,3 +1,38 @@
+🧾 GitHub README → Technical, concise, action-oriented
+🎯 Audience: developers, contributors, recruiters scanning for skills
+✅ Must include:
+Project Title + One-liner
+RustPulse — A fast and safe Rust backend system for real-time server health monitoring and API exposure.
+Demo or Screenshot (GIF, TUI screenshot, or API call)
+Tech Stack & Architecture (Rust, crates used, patterns like Hexagonal Arch.)
+ 
+✅ Purpose: A backend system to monitor servers, log health metrics, and expose REST/GraphQL APIs. 
+✅ Tech Stack: 
+Axum (Rust web framework) 
+SeaORM + SQLx (Database ORM & raw queries) 
+JWT & OAuth (Authentication & Security) 
+Prometheus + OpenTelemetry (Metrics & Monitoring) 
+Docker & Kubernetes (Deployment & Scaling) 
+GitHub Actions (CI/CD for Rust) 
+✅ Core Features: 
+Server health check API (CPU, Memory, Disk usage) 
+Real-time logging & monitoring (via Prometheus/OpenTelemetry) 
+User authentication (JWT-based) 
+GraphQL API for querying server stats Dockerized deployment 
+✅ Portfolio Value: 
+Demonstrates Rust backend expertise (API development, DB integration). 
+Shows high-performance server monitoring for production systems. 
+Industry-relevant for FinTech, DevOps, and infrastructure roles.
+
+Installation / Usage (copy-pastable commands)
+Key Features
+How It Works / Folder Structure
+Testing & CI details
+Todo / Roadmap
+License, contribution guide (optional)
+💡 You’re speaking to someone who wants to run, read, or assess your code quickly.
+
+
 # 📡 RustPulse
 
 A CLI tool to monitor server resources in real-time — written in idiomatic Rust.
