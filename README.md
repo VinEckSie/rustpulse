@@ -1,7 +1,12 @@
 # 📡 RustPulse
 
 A CLI tool to monitor server resources in real-time — written in idiomatic Rust.
-## 📖 [Full case study on Notion](https://your.notion.site/project-page)
+
+## 📖 Full Case Study
+
+→ [Read it on Notion](https://your.notion.site/project-page)  
+→ [Or view the Markdown version](./docs/case-study.md)
+
 
 ## 🔧 Features
 - ⏱ Live CPU/memory usage
