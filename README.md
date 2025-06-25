@@ -5,6 +5,70 @@
     - 🔹 **How to Use** (API endpoints, example requests)
     - 🔹 **Live Demo Link** (if deployed)
 
+## 🚀 Summary
+
+✅ **Rust-first stack for backend & frontend** – Zero external runtime dependencies  
+✅ **High-performance & scalable** – Async Rust, gRPC, PostgreSQL  
+✅ **Secure & fault-tolerant** – JWT auth, tracing, structured error handling  
+✅ **Production-ready** – Dockerized, CI/CD via GitHub Actions, deployable on DigitalOcean
+
+---
+
+## 📡 Key Features
+
+### 🛠 Backend API (Rust)
+- 🔧 High-performance REST + gRPC interface (Actix + Tonic)
+- 📈 Real-time monitoring of CPU, Memory, Disk, and Network
+- 🗄 Stores performance history in PostgreSQL
+- 🚨 Custom alert system (e.g., threshold breaches)
+
+### 🖥 Frontend Dashboard (Tauri)
+- 📊 Live charts & system insights (Plotters)
+- 🧭 Dashboard to view alerts, logs, and trends
+- 🌒 Dark/light theme support
+- 🔔 Instant notifications when thresholds are exceeded
+
+---
+
+## 🎯 Built for High-Reliability Environments
+
+RustPulse targets teams working with:
+- Real-time simulation or control systems
+- Internal compute clusters for engineering workloads
+- Local infrastructure with performance and uptime constraints
+
+This project is designed with **predictability, observability, and developer control** in mind — suitable for mission-critical systems without branding it explicitly as aerospace.
+
+---
+
+## 📦 Tech Stack
+
+| Component        | Tech                     |
+|------------------|--------------------------|
+| Backend          | Actix Web (Rust)         |
+| API Transport    | gRPC via Tonic (Rust)    |
+| Database         | PostgreSQL + Diesel ORM  |
+| Async Runtime    | Tokio                    |
+| Auth & Security  | JWT (jsonwebtoken crate) |
+| Logging          | Tracing                  |
+| UI Framework     | Tauri + Plotters         |
+| Error Handling   | thiserror + anyhow       |
+| CI/CD            | GitHub Actions + Clippy  |
+| Deployment       | Docker + DigitalOcean    |
+
+---
+
+## 🧪 Example Use Case
+
+1. Run RustPulse on your infrastructure  
+2. View real-time performance data via the Tauri dashboard  
+3. Set custom thresholds and receive alerts instantly  
+4. Review historical performance trends and logs
+
+---
+
+
+
 
 🧾 GitHub README → Technical, concise, action-oriented
 🎯 Audience: developers, contributors, recruiters scanning for skills
