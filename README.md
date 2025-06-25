@@ -241,4 +241,38 @@ CopyEdit
 )](
 )
 
+### **🚀 Finalized Project: Rust-Based Real-Time Server Monitoring System**
 
+This project follows a **problem-based learning approach** and ensures it is a **visually engaging, ready-to-use solution** for businesses.
+
+### **🚀 Finalized Tech Stack for the Rust-Based Real-Time Server Monitoring System**
+
+| **Component** | **Technology (Rust-Only)** | **Purpose** |  |  |  |
+| --- | --- | --- | --- | --- | --- |
+| **Backend Framework** | **Actix Web (Rust)** | High-performance REST API framework |  |  |  |
+| **API Communication** | **Tonic gRPC (Rust)** | Efficient, low-latency data exchange |  |  |  |
+| **Database** | **PostgreSQL + Diesel ORM** | Storing server performance logs & history |  |  |  |
+| **Asynchronous Processing** | **Tokio (Rust Async Runtime)** | Handling real-time data efficiently |  |  |  |
+| **Telemetry & Logging** | **Tracing (Rust Crate)** | Capturing API logs & debugging information |  |  |  |
+| **Security & Authentication** | **JWT (jsonwebtoken crate)** | Secure login & user session management |  |  |  |
+| **Frontend UI** | **Tauri (Rust-based UI framework)** | Interactive desktop dashboard |  |  |  |
+| **Data Visualization** | **Plotters (Rust Graph Library)** | Real-time graphs & analytics |  |  |  |
+| **Error Handling** | **thiserror + anyhow (Rust Crates)** | Reliable & structured error management |  |  |  |
+| **Testing & CI/CD** | **Cargo test, Clippy, GitHub Actions** | Unit testing, static analysis, continuous integration |  |  |  |
+| **Deployment & Hosting** | **Docker + DigitalOcean** | Containerized deployment for easy setup |  |  |  |
+| **Zero-Downtime Deployment** | **Rolling Updates (Docker)** | Ensuring seamless system updates |  |  |  |
+
+---
+
+### **🚀 Summary**
+
+🖥️ UI Design Goals (to include in README + Case Study)
+RustPulse should deliver a business-ready dashboard with:
+
+✅ Real-time performance dashboard – Monitor CPU, Memory, Disk, and Network usage live
+
+✅ Interactive graphs – Visualize performance trends clearly and smoothly
+
+✅ Alert system – Immediate warnings for critical performance thresholds
+
+✅ Historical data viewer – Analyze past system states for diagnostics and improvement
