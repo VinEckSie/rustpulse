@@ -6,15 +6,11 @@ description = "Backend of RustPulse"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/VinEckSie/rustpulse"
 documentation = "https://docs.rs/rustpulse"
-<<<<<<< HEAD
-license = "MIT"
-=======
 
 #needed for crates.io
 [[bin]]
 name = "rustpulse"
 path = "src/main.rs"
->>>>>>> 0c4557a (feat(DDD): clean structure)
 
 [dependencies]
 axum = "0.8.4"
