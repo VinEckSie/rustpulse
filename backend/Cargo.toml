@@ -6,7 +6,15 @@ description = "Backend of RustPulse"
 license = "MIT OR Apache-2.0"
 repository = "https://github.com/VinEckSie/rustpulse"
 documentation = "https://docs.rs/rustpulse"
+<<<<<<< HEAD
 license = "MIT"
+=======
+
+#needed for crates.io
+[[bin]]
+name = "rustpulse"
+path = "src/main.rs"
+>>>>>>> 0c4557a (feat(DDD): clean structure)
 
 [dependencies]
 axum = "0.8.4"
@@ -23,6 +31,8 @@ tower-http = { version = "0.6.4", features = ["trace"] }
 uuid = "1.17.0"
 chrono = "0.4.41"
 sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid"] }
+clap = { version = "4.5.40", features = ["derive"] }
+rand = "0.8.5"
 
 [package.metadata.cargo-machete]
 ignored = ["serde_json", "serde", "thiserror",  "anyhow"]
