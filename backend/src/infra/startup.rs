@@ -11,7 +11,7 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     let app = Router::new()
         .merge(root::router())
         .merge(health::router())
-        .merge(metrics::router())
+        //.merge(metrics::router())
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::new().level(Level::INFO))

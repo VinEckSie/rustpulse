@@ -13,4 +13,9 @@ impl<'a, MetricsRepo: MetricsRepository> MetricsService<'a, MetricsRepo> {
     pub fn get_status(&self) -> NodeTelemetry {
         self.repo.fetch_metrics()
     }
+
+    // pub fn list_all(&self, node_id: Uuid, limit: usize) -> Vec<NodeTelemetry> {
+    //     self.repo.fetch_recent(node_id, limit)
+    // }
+
 }

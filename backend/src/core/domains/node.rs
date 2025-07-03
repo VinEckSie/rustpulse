@@ -32,7 +32,7 @@ struct Position {
 pub struct Node {
     uuid: Uuid,
     name: String,
-    server_type : NodeType,
+    pub server_type : NodeType,
     ip: IpAddr,
     status: NodeStatus,
     tags: Vec<String>,
