@@ -6,8 +6,6 @@
 
 
 *A Rust-native system for local, secure, and high-performance telemetry monitoring — built with Hexagonal Architecture, DDD, and TDD.*
-> Fast, modular, and secure real-time telemetry system written in Rust for mission-critical environments.
-
 
 ## 📖 Full Case Study
 
