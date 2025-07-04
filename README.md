@@ -1,223 +1,146 @@
 # 🚀 RustPulse — Real-Time Monitoring for Mission-Critical Systems 
-[![CI](https://github.com/yourusername/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/yourusername/rustpulse/actions)
+[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange)](https://www.rust-lang.org/)
-[![Last Commit](https://img.shields.io/github/last-commit/yourusername/rustpulse)](https://github.com/yourusername/rustpulse)
+[![Last Commit](https://img.shields.io/github/last-commit/vinecksie/rustpulse)](https://github.com/vinecksie/rustpulse)
 
 
 *A Rust-native system for local, secure, and high-performance telemetry monitoring — built with Hexagonal Architecture, DDD, and TDD.*
 > Fast, modular, and secure real-time telemetry system written in Rust for mission-critical environments.
 
 
----
-
-## ❓ Why RustPulse?
-
-RustPulse was built to showcase what modern Rust can offer in terms of:
-
-- Deterministic performance
-- Fully native backend + frontend
-- True test-first, modular architecture (Hexagonal + DDD)
-- Aerospace-inspired system reliability, minus the overhead
-
----
-
 ## 📖 Full Case Study
 
-→ [Read it on Notion](https://your.notion.site/project-page)  
-→ [Or view the Markdown version](./docs/case-study.md)
+> 🔍 Read the full technical case study on [Notion](https://vinecksie.notion.site/RustPulse-Secure-Real-Time-Telemetry-Engine-in-Rust-21e066ddb92f8091a561c1f3b710cc0e) or browse the [weekly changelog](https://github.com/VinEckSie/rust-weekly-changelog).
 
----
 
 ## 📡 Overview
 
 RustPulse is a modular, production-ready telemetry monitoring system written entirely in Rust. It is built for high-reliability environments such as simulation clusters, internal infrastructure, and latency-sensitive operations.
 
-✅ Hexagonal Architecture (Ports & Adapters)  
-✅ Domain-Driven Design + Test-Driven Development  
-✅ Fast REST/gRPC APIs with PostgreSQL persistence  
-✅ Tauri desktop dashboard with real-time visualizations  
-✅ Dockerized, secure, and CI-integrated
+- ✅ Hexagonal Architecture (Ports & Adapters)
+- ✅ Domain-Driven Design + Test-Driven Development
+- ✅ Fast REST/gRPC APIs with PostgreSQL persistence
+- ✅ CLI to Dashboard workflow with Prometheus/Grafana
+- ✅ Offline-first design for edge/mission-critical ops
 
----
-
+<!--
 ## 🌐 Live Demo
 
 🚧 Coming soon – Will be available at:  
 👉 [https://demo.rustpulse.io](https://demo.rustpulse.io)
+-->
 
----
+## 🧱 Architecture Overview
 
-## 🧱 Tech Stack
+- **Hexagonal Architecture**
+    - Modular structure separating core logic and external interfaces
 
-| Component                | Technology (Rust-Only)           | Purpose                                         |
-|--------------------------|----------------------------------|-------------------------------------------------|
-| Backend Framework        | Actix Web                        | High-performance REST API framework             |
-| API Communication        | Tonic (gRPC)                     | Efficient, low-latency data exchange            |
-| Database                 | PostgreSQL + Diesel ORM          | Storing server performance logs & history       |
-| Async Runtime            | Tokio                            | Handling real-time data efficiently             |
-| Telemetry & Logging      | Tracing                          | Capturing API logs & debugging information      |
-| Security & Authentication| JWT (jsonwebtoken crate)         | Secure login & user session management          |
-| Frontend UI              | Tauri                            | Interactive native desktop dashboard            |
-| Data Visualization       | Plotters                         | Real-time graphs & analytics                    |
-| Error Handling           | thiserror + anyhow               | Reliable & structured error management          |
-| Testing & CI/CD          | Cargo test, Clippy, GitHub Actions| Unit testing, static analysis, CI/CD pipeline   |
-| Deployment & Hosting     | Docker + DigitalOcean            | Containerized deployment for easy setup         |
-| Zero-Downtime Deployment | Rolling Updates (Docker)         | Seamless system updates with no downtime        |
+- **Domain-Driven Design (DDD)**
+    - `Node`: agent identity and lifecycle
+    - `NodeTelemetry`: real-time metrics from nodes
+    - `TelemetrySource`: ingestion and validation layer
+
+- **Test-Driven Development (TDD)**
+    - Integration-driven workflows for async flows & interfaces
+
+- **Security & Auth**
+    - JWT for all API layers
+    - Role-based access (planned)
+
+## ⚙️ Tech Stack
+
+| Component | Tooling | Purpose |
+|----------|---------|---------|
+| Backend Framework | Axum (Rust) | Fast and ergonomic async API building |
+| Storage | PostgreSQL + SQLx / JSONL | Persistent or append-only telemetry logging |
+| Transport | Tonic (gRPC) | Binary protocol for scalable services |
+| CQRS | Axum + Async Executors | Clean separation of command/query |
+| CLI Tool | Clap + Rust | Native CLI with full telemetry control |
+| Auth | JWT (jsonwebtoken) | Secure session management |
+| Observability | Prometheus + Grafana | Metrics & dashboards |
+| Logging | Tracing | High-performance structured logs |
+| CI/CD | GitHub Actions + Clippy | Linting, testing, quality gates |
 
 
----
+## 🔧 Features
 
-## 🔧 Key Features
+### ✅ Backend API
 
-### Backend API
-- ✅ Real-time telemetry collection (CPU, Memory, Disk, Network)
-- ✅ REST & gRPC API for data access
-- ✅ Custom alert thresholds and notifications
-- ✅ Historical metrics storage
-
----
-
-### Desktop Dashboard
-- ✅ Native Tauri-based UI (no browser needed)
-- ✅ Live charts with Plotters
-- ✅ Dark/light mode switch
-- ✅ Local-only, secure access
-
----
-
-## 🧪 Example Use Case
-
-> A simulation team runs CPU-heavy processes. With RustPulse:  
-> – Engineers track live system metrics through the dashboard  
-> – Alerts trigger when thresholds are exceeded  
-> – Teams respond immediately to prevent outages  
-> – Logs and trends support diagnostics
-
----
-
-## 🚀 How to Run
-
-### 🐳 Docker (Recommended)
-```bash
-git clone https://github.com/yourname/rustpulse.git
-cd rustpulse
-docker-compose up --build
-```
-
-### 🦀 Local (Dev)
-```bash
-cargo build
-cargo run
-```
-
----
-
-### 🧪 Testing & CI
-RustPulse is built using TDD principles:
-
-Unit and integration tests (cargo test)
-
-Linting with Clippy (cargo clippy)
-
-GitHub Actions for CI/CD
-
----
+- RESTful endpoints via Axum
+- Modular `.env` support with `dotenvy`
+- Centralized logging via `tracing`
+- Mock repo for data simulation
+- Fully async architecture
 
 ## 📁 Project Structure
 
-```text
-rustpulse/
-├── src/
-│   ├── main.rs              # Entrypoint
-│   ├── config.rs            # Load .env + init settings
-│   ├── routes.rs            # Central Axum router
-│   ├── telemetry.rs         # Tracing + Prometheus setup
-│   ├── middleware.rs        # Logging and auth middleware
-│   ├── errors.rs            # Error handling
-│   ├── domain/
-│   │   ├── model.rs         # Entities: Server, Metric
-│   │   ├── port.rs          # Traits: Storage, Auth, Notifier
-│   │   └── service.rs       # Business logic (use cases)
-│   ├── infra/
-│   │   ├── db.rs            # Postgres impl
-│   │   ├── auth.rs          # JWT/OAuth impl
-│   │   └── notifier.rs      # Alerts/log integrations
-├── tests/                   # Integration tests
-├── .env                     # Environment variables
-├── Dockerfile
-├── docker-compose.yml
-├── kubernetes/              # Helm charts or raw YAML
-├── .github/workflows/       # CI/CD config
-└── Cargo.toml
+```
+src/
+├── adapters/                 # Outbound adapters (DBs, mocks, sources)
+│   ├── mock_repo.rs
+│   ├── postgres_metrics_repo.rs
+│   └── telemetry_source_repo.rs
+│
+├── app/                      # Application services and orchestration
+│   ├── errors.rs
+│   └── metrics_service.rs
+│
+├── cli/                      # Command-line interface logic
+│   ├── args.rs
+│   └── commands.rs
+│
+├── core/                     # Domain logic: entities, ports, use cases
+│   ├── domains/
+│   │   ├── node.rs
+│   │   └── telemetry.rs
+│   ├── domains.rs            # Central re-exports (flat module style)
+│   └── port.rs               # Domain ports (interfaces for adapters)
+│
+├── handlers/                 # Inbound interfaces: HTTP handlers (Axum)
+│   ├── health.rs
+│   ├── metrics.rs
+│   └── root.rs
+│
+├── infra/                    # Infrastructure layer: DB, logging, startup
+│   ├── db.rs
+│   ├── logging.rs
+│   └── startup.rs
+│
+├── tests/                    # Integration tests
+│   ├── api.rs
+│   └── common.rs
+│
+├── lib.rs                    # Library entry point (used for tests or crates)
+└── main.rs                   # Binary entry point
 ```
 
----
+## 🚀 How to Run
 
-### 📌 Roadmap
- Phase 2: Auth + Role Guards
+🚧 Coming soon
 
- Phase 3: Observability + CI/CD
+## 📸 Demo & Screenshots
 
- Phase 4: Tauri UI buildout
+🚧 Coming soon
 
- Phase 5: Testing + Public Demo
-
- ---
-
-### 📸 Demo & Screenshots
-🚧 Coming soon after Phase 4
-
----
-
+<!--
 ## 🤝 Contributing
-
-Contributions are welcome!  
-If you're learning Rust, curious about system monitoring, or want to explore Hexagonal Architecture in practice — feel free to fork, open issues, or create pull requests.
-
-> RustPulse follows TDD + clean layering. It’s great for clean collaboration.
-
----
+-->
 
 ## 📚 Documentation
 
-```bash
-cargo doc --open
-```
+🚧 Processing
 
-Full hosted documentation will be available on docs.rs after the first crate release.
+Hosted docs will be available on [docs.rs](https://docs.rs/rustpulse) after first crate release.
 
----
+## 📄 License
 
-### ✅ Final Section Order (top to bottom)
-
-| Section | Placement |
-|---------|-----------|
-| ❓ Why RustPulse | Right before `📖 Full Case Study` |
-| 📖 Full Case Study | Already in place |
-| 📡 Overview → 📁 Project Structure | As-is |
-| 📌 Roadmap | Keep here |
-| 📸 Demo & Screenshots | Keep here |
-| 📚 Documentation | Add before License |
-| 🤝 Contributing | Add before Documentation |
-| 📄 License | Final section (always last) |
-
----
-
-
-### 📄 License
 MIT OR Apache-2.0
 
-🧭 How to publish docs like a pro — step by step 
 
-🦀 1. Make sure your crate is ready Your Cargo.toml must have: toml CopyEdit [package]name = "your_crate_name"version = "0.1.0"edition = "2021"description = "What your crate does"license = "MIT OR Apache-2.0"repository = "[https://github.com/yourname/your_crate"documentation](https://github.com/yourname/your_crate%22documentation) = "https://docs.rs/your_crate" documentation = is optional but good practice 
+<br>
 
-🔐 2. Get an API token from crates.io Go to
+Thanks for checking out RustPulse! Follow the full case study for deep dives into architecture, design, and async telemetry in Rust.
 
-Click "New Token" Copy the token 
 
-🛠️ 3. Login once from CLI bash CopyEdit cargo login YOUR_TOKEN_HERE 
 
-📦 4. Publish your crate bash CopyEdit cargo publish This: Uploads your crate to crates.io Automatically triggers docs.rs to build your docs In minutes, your docs are live at: arduino CopyEdit https://docs.rs/your_crate_name 📎 Optional: Test your docs before publishing Run: bash CopyEdit cargo doc --open This builds the docs locally and opens them in your browser — exactly like what users will see on docs.rs. 
-
-🚨 Bonus: Add a docs badge in your README.md
