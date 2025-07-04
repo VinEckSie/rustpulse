@@ -23,6 +23,9 @@ RustPulse is a modular, production-ready telemetry monitoring system written ent
 - ✅ Fast REST/gRPC APIs with PostgreSQL persistence
 - ✅ CLI to Dashboard workflow with Prometheus/Grafana
 - ✅ Offline-first design for edge/mission-critical ops
+- ✅ Pluggable source architecture (trait-based)
+- ✅ Currently uses `MockTelemetrySource` for simulation
+- ✅ Real collectors can be added without touching core logic
 
 <!--
 ## 🌐 Live Demo
