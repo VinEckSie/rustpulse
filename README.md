@@ -1,5 +1,5 @@
-# 🚀 RustPulse — Real-Time Monitoring for Mission-Critical Systems 
-[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
+# 🚀 RustPulse — Real-Time Monitoring for Edge Systems 
+[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/audit.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange)](https://www.rust-lang.org/)
 [![Last Commit](https://img.shields.io/github/last-commit/vinecksie/rustpulse)](https://github.com/vinecksie/rustpulse)
