@@ -124,9 +124,9 @@ src/
 
 🚧 Coming soon
 
-<!--
 ## 🤝 Contributing
--->
+
+🚧 Project in early development. No contributions accepted yet. 🚧
 
 ## 📚 Documentation
 
