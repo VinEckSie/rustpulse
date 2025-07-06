@@ -26,12 +26,13 @@ thiserror = "2.0.12"
 tower-http = { version = "0.6.4", features = ["trace"] }
 uuid = "1.17.0"
 chrono = "0.4.41"
-sqlx = {version = "0.8.6", features = ["postgres", "runtime-tokio", "macros", "uuid"] }
+sqlx = { version = "0.8.6", default-features = false, features = ["runtime-tokio", "postgres"] }
+
 clap = { version = "4.5.40", features = ["derive"] }
 rand = "0.8.5"
 
 [package.metadata.cargo-machete]
-ignored = ["serde_json", "serde", "thiserror",  "anyhow"]
+ignored = ["serde_json", "serde", "thiserror", "anyhow"]
 
 [dev-dependencies]
 reqwest = { version = "0.12.15", features = ["json"] }
