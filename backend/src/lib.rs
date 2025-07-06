@@ -1,16 +1,15 @@
-pub mod config;
-pub mod infra;
-pub mod handlers;
 pub mod adapters;
 pub mod app;
+pub mod config;
 pub mod core;
+pub mod handlers;
+pub mod infra;
 
 use config::Config;
 use infra::logging::init as init_logging;
 use infra::startup::start_server;
 
 pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
-    dotenvy::dotenv().ok();
     let config = Config::from_env().expect("Invalid configuration");
 
     init_logging(config.log_json);

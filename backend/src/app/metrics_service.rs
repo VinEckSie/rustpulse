@@ -1,5 +1,5 @@
-use crate::core::port::MetricsRepository;
 use crate::core::domains::telemetry::NodeTelemetry;
+use crate::core::port::MetricsRepository;
 
 pub struct MetricsService<'a, MetricsRepo: MetricsRepository> {
     repo: &'a MetricsRepo,
@@ -17,5 +17,4 @@ impl<'a, MetricsRepo: MetricsRepository> MetricsService<'a, MetricsRepo> {
     // pub fn list_all(&self, node_id: Uuid, limit: usize) -> Vec<NodeTelemetry> {
     //     self.repo.fetch_recent(node_id, limit)
     // }
-
 }

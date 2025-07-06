@@ -3,7 +3,7 @@
 //! This module defines abstract interfaces for fetching and polling telemetry data:
 //! - `MetricsRepository`: used by services to fetch metrics from a repository.
 //! - `TelemetrySource`: used by adapters to poll live metrics from external sources.
-//! 
+//!
 
 use crate::core::domains::node::Node;
 use crate::core::domains::telemetry::NodeTelemetry;

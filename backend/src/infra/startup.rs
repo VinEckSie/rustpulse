@@ -1,10 +1,8 @@
-
 use axum::Router;
-use tokio::net::TcpListener;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
 
-use crate::handlers::{self, health, metrics, root};
+use crate::handlers::{health, root};
 
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     //Build Router
@@ -20,9 +18,7 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
         );
 
     let addr = format!("127.0.0.1:{port}");
-    let listener = tokio::net::TcpListener::bind(addr)
-        .await
-        .unwrap();
+    let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
 
     println!("listening on {}", listener.local_addr().unwrap());
 

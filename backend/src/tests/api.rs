@@ -32,7 +32,16 @@ async fn store_event_returns_201() {
     assert_eq!(response.status(), StatusCode::CREATED);
 }
 
+#[tokio::test]
+async fn fetch_nonexistent_event_returns_404() {
+    let app = spawn_app().await;
+    let client = reqwest::Client::new();
 
+    let response = client
+        .get(format!("{}/events/unknown-id", app.address))
+        .send()
+        .await
+        .unwrap();
 
-
-
+    assert_eq!(response.status(), StatusCode::NOT_FOUND);
+}

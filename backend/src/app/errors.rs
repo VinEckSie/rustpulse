@@ -1,4 +1,3 @@
-
 pub enum MetricsError {
     InvalidTimestamp,
 }

@@ -1,11 +1,10 @@
-
-use tracing_subscriber::{fmt, EnvFilter};
 use tracing_appender::rolling;
+use tracing_subscriber::{EnvFilter, fmt};
 
 pub fn init(log_json: bool) {
     //Init Logs
     let logfile = rolling::daily("./logs", "info");
-    
+
     //Subscriber
     let subscriber = fmt()
         .with_env_filter(
@@ -29,5 +28,3 @@ pub fn check_logs() {
         println!("{key} = {value}");
     }
 }
-
-

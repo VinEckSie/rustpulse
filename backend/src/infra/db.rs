@@ -1,4 +1,4 @@
-use sqlx::{postgres::PgPoolOptions, PgPool};
+use sqlx::{PgPool, postgres::PgPoolOptions};
 
 pub async fn connect(db_url: &str) -> Result<PgPool, sqlx::Error> {
     PgPoolOptions::new()
@@ -6,3 +6,5 @@ pub async fn connect(db_url: &str) -> Result<PgPool, sqlx::Error> {
         .connect(db_url)
         .await
 }
+
+//migration
