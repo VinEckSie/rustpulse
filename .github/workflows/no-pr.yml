@@ -1,0 +1,14 @@
+name: Block Pull Requests
+
+on:
+  pull_request:
+    types: [opened, reopened, synchronize]
+
+jobs:
+  block:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Block all PRs
+        run: |
+          echo "⚠️ Pull requests are not allowed on this repository right now."
+          exit 1
