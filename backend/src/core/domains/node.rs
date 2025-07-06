@@ -54,8 +54,11 @@ mod tests {
 
     #[test]
     fn test_node_initialization() {
+        let uuid_local = Uuid::parse_str("a1a2a3a4b1b2c1c2d1d2d3d4d5d6d7d8");
+
         let node = Node {
-            uuid: Uuid::new_v4(),
+            uuid: uuid_local.unwrap(),
+            // uuid: Uuid::new_v4(),
             name: "Test Node".to_string(),
             server_type: NodeType::GroundStation,
             ip: "127.0.0.1".parse().unwrap(),
