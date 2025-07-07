@@ -10,7 +10,7 @@
 
 ## 📖 Full Case Study
 
-> 🔍 Read the full technical case study [here](https://vinecksie.notion.site/RustPulse-Secure-Real-Time-Telemetry-Engine-in-Rust-21e066ddb92f8091a561c1f3b710cc0e) or browse the [weekly changelog](https://github.com/VinEckSie/rust-weekly-changelog).
+> 🔍 Read the full technical case study [here](https://vinecksie.super.site/) or browse the [weekly changelog](https://github.com/VinEckSie/rust-weekly-changelog).
 
 
 ## 📡 Overview
