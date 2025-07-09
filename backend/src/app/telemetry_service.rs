@@ -1,4 +1,4 @@
-use crate::core::domains::telemetry::NodeTelemetry;
+use crate::core::domains::node_telemetry::NodeTelemetry;
 use crate::core::port::MetricsRepository;
 
 pub struct MetricsService<'a, MetricsRepo: MetricsRepository> {
