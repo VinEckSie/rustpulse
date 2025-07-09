@@ -1,11 +1,13 @@
 use chrono::{DateTime, Duration, Utc};
+use serde::{Deserialize, Serialize};
 use uuid::Uuid;
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct NodeTelemetry {
-    pub id: Uuid,
+    pub node_id: Uuid,
     pub server_id: Uuid,
     pub cpu: f64,
-    pub ram: f64,
+    pub memory: f64,
     pub timestamp: DateTime<Utc>,
     pub connected_users: u16,
     pub network_usage: f64,

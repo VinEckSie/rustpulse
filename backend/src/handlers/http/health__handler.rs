@@ -1,7 +1,7 @@
 use axum::response::IntoResponse;
-use axum::{Router, routing::get};
+use axum::{routing::get, Router};
 
-pub fn router() -> Router {
+pub fn routes() -> Router {
     Router::new().route("/health", get(health_check))
 }
 

@@ -1,3 +1,2 @@
-pub mod health;
-pub mod metrics;
-pub mod root;
+mod cli;
+pub mod http;

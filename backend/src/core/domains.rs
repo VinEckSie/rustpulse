@@ -1,2 +1,2 @@
 pub mod node;
-pub mod telemetry;
+pub mod node_telemetry;

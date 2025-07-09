@@ -1,15 +1,22 @@
+use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
+use crate::app::telemetry_service::TelemetryService;
+use crate::handlers::http;
 use axum::Router;
+use std::path::PathBuf;
+use std::sync::Arc;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
 use tracing::Level;
 
-use crate::handlers::{health, root};
-
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
+    let telemetry_path = PathBuf::from("data/telemetry.jsonl"); // adapte ce chemin
+    let repo = Arc::new(JsonlTelemetryRepo::new(telemetry_path)); // implémente TelemetryRepository
+    let service = Arc::new(TelemetryService::new(repo.clone())); // implémente TelemetryQueryCase
+
     //Build Router
     let app = Router::new()
-        .merge(root::router())
-        .merge(health::router())
-        //.merge(metrics::router())
+        .merge(http::root_handler::routes())
+        .merge(http::health__handler::routes())
+        .merge(http::telemetry_handler::routes(service)) // now injecting state
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::new().level(Level::INFO))

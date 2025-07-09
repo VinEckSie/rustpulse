@@ -1,20 +1,36 @@
-use crate::core::domains::node_telemetry::NodeTelemetry;
-use crate::core::port::MetricsRepository;
+// use crate::core::domains::node_telemetry::NodeTelemetry;
+// use crate::core::port::;
 
-pub struct MetricsService<'a, MetricsRepo: MetricsRepository> {
-    repo: &'a MetricsRepo,
+use crate::core::domains::node_telemetry::NodeTelemetry;
+use crate::core::port::telemetry_ingest_case::TelemetryIngestCase;
+use crate::core::port::telemetry_query_case::TelemetryQueryCase;
+use crate::core::port::telemetry_repo::TelemetryRepository;
+use std::sync::Arc;
+
+pub struct TelemetryService<TelemetryRepo: TelemetryRepository> {
+    repo: Arc<TelemetryRepo>,
 }
 
-impl<'a, MetricsRepo: MetricsRepository> MetricsService<'a, MetricsRepo> {
-    pub fn new(repo: &'a MetricsRepo) -> Self {
+impl<TelemetryRepo: TelemetryRepository> TelemetryService<TelemetryRepo> {
+    pub fn new(repo: Arc<TelemetryRepo>) -> Self {
+        // Accept Arc instead of plain type
         Self { repo }
     }
+}
 
-    pub fn get_status(&self) -> NodeTelemetry {
-        self.repo.fetch_metrics()
+#[async_trait::async_trait]
+impl<TelemetryRepo: TelemetryRepository + Send + Sync> TelemetryQueryCase
+    for TelemetryService<TelemetryRepo>
+{
+    async fn fetch_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<NodeTelemetry>> {
+        self.repo.query_all(node_id).await
     }
-
-    // pub fn list_all(&self, node_id: Uuid, limit: usize) -> Vec<NodeTelemetry> {
-    //     self.repo.fetch_recent(node_id, limit)
-    // }
+}
+#[async_trait::async_trait]
+impl<TelemetryRepo: TelemetryRepository + Send + Sync> TelemetryIngestCase
+    for TelemetryService<TelemetryRepo>
+{
+    async fn ingest(&self, telemetry: NodeTelemetry) -> anyhow::Result<()> {
+        self.repo.save(telemetry).await
+    }
 }

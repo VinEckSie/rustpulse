@@ -1,3 +1,2 @@
-pub mod mock_repo;
-pub mod postgres_metrics_repo;
-mod telemetry_source_repo;
+pub mod jsonl_telemetry_repo;
+pub mod mock_telemetry;

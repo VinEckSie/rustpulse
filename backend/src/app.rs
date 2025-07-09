@@ -1,2 +1,2 @@
 pub mod errors;
-pub mod metrics_service;
+pub mod telemetry_service;
