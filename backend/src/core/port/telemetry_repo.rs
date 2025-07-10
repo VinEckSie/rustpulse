@@ -9,7 +9,7 @@ pub trait TelemetryRepository {
 
 #[cfg(test)]
 mod tests {
-    struct MockRepo;
+    struct _MockRepo;
 
     // impl TelemetryRepository for MockRepo {
     //
