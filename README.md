@@ -66,14 +66,15 @@ RustPulse is a modular, production-ready telemetry monitoring system written ent
 
 
 ## 🔧 Features
-
-### ✅ Backend API
-
-- RESTful endpoints via Axum
-- Modular `.env` support with `dotenvy`
-- Centralized logging via `tracing`
-- Mock repo for data simulation
-- Fully async architecture
+- RESTful endpoints using `axum`
+- Modular config via `.env` with `dotenvy`
+- Centralized logging with `tracing` and `tracing-subscriber`
+- Integration & unit tests using `reqwest` + `tokio`
+- **Architecture**: Hexagonal Architecture for scalable and maintainable design.
+- **Adapters**: JSONL repository for efficient data persistence and querying.
+- **Asynchronous**: Thread-safe operations with `tokio::sync::Mutex`.
+- **Error Handling**: Simplified errors with `anyhow` crate.
+- **Testing**: Mock data and unit test integration for validation.
 
 ## 📁 Project Structure
 
