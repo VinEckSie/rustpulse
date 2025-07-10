@@ -20,3 +20,5 @@ pub struct NodeTelemetry {
     pub signal_strength: Option<f32>, // link health
     pub orientation: Option<(f64, f64, f64)>, // pitch, roll, yaw
 }
+
+//todo tests

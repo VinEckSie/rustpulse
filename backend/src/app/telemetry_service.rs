@@ -34,3 +34,19 @@ impl<TelemetryRepo: TelemetryRepository + Send + Sync> TelemetryIngestCase
         self.repo.save(telemetry).await
     }
 }
+
+// Example: app/telemetry_service.rs
+// #[cfg(test)]
+// mod tests {
+//     use super::*;
+//     use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
+//
+//     #[tokio::test]
+//     async fn test_telemetry_service() {
+//         let repo = JsonlTelemetryRepo::new("mock-path.jsonl".into());
+//         let service = TelemetryService::new(repo);
+//
+//         let telemetry = service.fetch_all(Some("001".parse().unwrap())).await.unwrap();
+//         // assert_eq!(telemetry, "mocked");
+//     }
+// }

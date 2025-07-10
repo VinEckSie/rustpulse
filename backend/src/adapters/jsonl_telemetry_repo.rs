@@ -59,3 +59,16 @@ impl TelemetryRepository for JsonlTelemetryRepo {
         Ok(result)
     }
 }
+
+// Example: adapters/jsonl_telemetry_repo.rs
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_load_metrics() {
+        let repo = JsonlTelemetryRepo::new("mock-path.jsonl".into());
+        //let data = repo.load().unwrap();
+        //assert_eq!(data.len(), 20); // Assuming 20 mock entries
+    }
+}

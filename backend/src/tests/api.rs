@@ -6,9 +6,12 @@ async fn health_check_works() {
     let app = spawn_app().await;
     let client = reqwest::Client::new();
 
-    let response = client.get(format!("{}/health", app.address))
-        .send().await.unwrap();
-    
+    let response = client
+        .get(format!("{}/health", app.address))
+        .send()
+        .await
+        .unwrap();
+
     assert_eq!(response.status(), StatusCode::OK);
 }
 
@@ -44,4 +47,19 @@ async fn fetch_nonexistent_event_returns_404() {
         .unwrap();
 
     assert_eq!(response.status(), StatusCode::NOT_FOUND);
+}
+#[tokio::test]
+async fn test_health_check() {
+    let app = crate::startup::app(); // Use your actual router setup
+    let response = app
+        .oneshot(
+            Request::builder()
+                .uri("/health")
+                .body(Body::empty())
+                .unwrap(),
+        )
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
 }

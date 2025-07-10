@@ -25,22 +25,12 @@ pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
         .with_state(service)
 }
 
-// pub async fn fetch_telemetry_handler(
-//     State(service): State<Arc<dyn TelemetryQueryCase>>,
-// ) -> impl IntoResponse {
-//     // Call your use case method here
-//     let data = service.fetch_all().await; // Must be an async trait method
-//
-//     match data {
-//         Ok(value) => Json(value).into_response(),
-//         Err(_) => axum::http::StatusCode::INTERNAL_SERVER_ERROR.into_response(),
-//     }
-// }
 pub async fn fetch_telemetry_handler(
     State(service): State<Arc<dyn TelemetryQueryCase>>,
     Query(params): Query<HashMap<String, String>>,
 ) -> impl IntoResponse {
     let node_id = params.get("node_id").cloned();
+
     match service.fetch_all(node_id).await {
         Ok(metrics) => Json(metrics).into_response(),
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
