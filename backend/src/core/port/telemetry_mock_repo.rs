@@ -43,7 +43,7 @@ impl MockDataGenerator {
 
             let telemetry_json =
                 serde_json::to_string(&mock_telemetry).expect("Failed to serialize telemetry");
-            writeln!(file, "{}", telemetry_json).expect("Failed to write telemetry to file");
+            writeln!(file, "{telemetry_json}").expect("Failed");
         }
     }
 }

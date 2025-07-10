@@ -3,7 +3,7 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{extract::State, response::IntoResponse, Json, Router};
+use axum::{Json, Router, extract::State, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
 

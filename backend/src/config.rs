@@ -7,6 +7,7 @@ pub struct Config {
 }
 
 impl Config {
+    #[allow(clippy::manual_inspect)]
     pub fn from_env() -> Result<Self, std::env::VarError> {
         // Initialize dotenv within the method
         dotenv().ok();

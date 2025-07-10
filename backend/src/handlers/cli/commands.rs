@@ -16,7 +16,7 @@
 //                     return;
 //                 }
 //             };
-// 
+//
 //             let telemetry = metrics_service::get_mock_metrics(target).await; // Or real call
 //             match output.as_str() {
 //                 "json" => println!("{}", serde_json::to_string_pretty(&telemetry).unwrap()),

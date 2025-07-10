@@ -30,7 +30,7 @@ impl TelemetryRepository for JsonlTelemetryRepo {
             .append(true)
             .open(&self.path)?;
         let line = serde_json::to_string(&telemetry)?;
-        writeln!(file, "{}", line)?;
+        writeln!(file, "{line}")?;
         Ok(())
     }
 
