@@ -3,7 +3,7 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Json, Router, extract::State, response::IntoResponse};
+use axum::{extract::State, response::IntoResponse, Json, Router};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -36,18 +36,6 @@ pub async fn fetch_telemetry_handler(
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }
-
-//
-// pub async fn get_metrics() -> Json<String> {
-//     let repo = PostgresMetricsRepository;
-//     let service = MetricsService::new(&repo);
-//     let metrics = service.get_status();
-//
-//     Json(format!(
-//         "Id: {}, Server Id: {}, CPU: {}, RAM: {}",
-//         metrics.id, metrics.server_id, metrics.cpu, metrics.ram
-//     ))
-// }
 
 // pub async fn ingest_telemetry_handler(
 //     State(service): State<Arc<dyn TelemetryIngestCase>>,
