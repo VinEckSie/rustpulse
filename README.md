@@ -8,6 +8,12 @@
 
 *A Rust-native system for local, secure, and high-performance telemetry monitoring — built with Hexagonal Architecture, DDD, and TDD.*
 
+> **⚠️ Notice**  
+> This repository is a personal development project and is currently **incomplete and not intended for public reuse, redistribution, or demonstration**.  
+> Please **do not fork, copy, or republish** any part of this code.  
+> The project is not in a stable state, and does not reflect a usable or launch-ready application.  
+> Thank you for respecting the intent of this work.
+
 ## 📖 Full Case Study
 
 > 🔍 Read the full technical case study [here](https://vinecksie.super.site/) or browse the [weekly changelog](https://github.com/VinEckSie/rust-weekly-changelog).
@@ -144,6 +150,7 @@ MIT OR Apache-2.0
 <br>
 
 Thanks for checking out RustPulse! Follow the full case study for deep dives into architecture, design, and async telemetry in Rust.
+
 
 
 
