@@ -1,3 +1,5 @@
+use std::io;
+use std::path::PathBuf;
 use thiserror::Error;
 
 #[derive(Debug, Error)]
@@ -8,4 +10,18 @@ pub enum ConfigError {
     InvalidPort(#[from] std::num::ParseIntError),
     #[error("Invalid database URL format: {details}")]
     InvalidDatabaseUrl { details: String },
+}
+
+#[derive(Debug, Error)]
+pub enum DataError {
+    #[error("Failed to open file at {path}: {source}")]
+    FileOpenError {
+        path: PathBuf,
+        #[source]
+        source: io::Error,
+    },
+    #[error("Failed to parse file")]
+    SerdeError(serde_json::Error),
+    #[error("IO Error")]
+    IoError(std::io::Error), //enable to wrap general IO errors
 }

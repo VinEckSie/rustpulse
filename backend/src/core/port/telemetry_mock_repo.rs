@@ -1,22 +1,27 @@
 use crate::core::domains::node_telemetry::NodeTelemetry;
+use crate::errors::DataError;
 use chrono::{Duration, Utc};
 use rand::Rng;
 use std::fs::OpenOptions;
 use std::io::Write;
+use std::path::PathBuf;
 use uuid::Uuid;
 
-/// Utility for writing mock data to a JSONL file.
 pub struct MockDataGenerator;
 
 impl MockDataGenerator {
-    pub fn generate_mock_data(path: &str, count: usize) {
-        let mut rng = rand::thread_rng();
-
+    pub fn generate_mock_data(path: &str, count: usize) -> Result<(), DataError> {
         let mut file = OpenOptions::new()
             .create(true)
             .append(true)
             .open(path)
-            .expect("Failed to open path for writing mock data");
+            //.expect("Failed to open path for writing mock data");
+            .map_err(|e| DataError::FileOpenError {
+                path: PathBuf::from(path),
+                source: e,
+            })?;
+
+        let mut rng = rand::thread_rng();
 
         for _ in 0..count {
             let mock_telemetry = NodeTelemetry {
@@ -28,7 +33,7 @@ impl MockDataGenerator {
                 connected_users: rng.gen_range(0..100),
                 network_usage: rng.gen_range(0.0..1.0),
                 disk_usage: rng.gen_range(0.0..100.0),
-                uptime: Duration::seconds(Rng::r#gen::<i64>(&mut rng) % 3600),
+                uptime: Duration::seconds(rng.gen_range(0..3600)),
                 errors_detected: Some(vec!["error1".to_string(), "error2".to_string()]),
                 anomaly: rng.gen_bool(0.1), // 10% chance of anomaly
                 battery_level: Some(rng.gen_range(0.0..100.0)),
@@ -42,9 +47,11 @@ impl MockDataGenerator {
             };
 
             let telemetry_json =
-                serde_json::to_string(&mock_telemetry).expect("Failed to serialize telemetry");
-            writeln!(file, "{telemetry_json}").expect("Failed");
+                serde_json::to_string(&mock_telemetry).map_err(DataError::SerdeError)?;
+
+            writeln!(file, "{telemetry_json}").map_err(DataError::IoError)?;
         }
+        Ok(())
     }
 }
 

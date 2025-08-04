@@ -11,7 +11,7 @@ use tracing::Level;
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     // Create mock data for testing
     let temp_file_path = "metrics_data.jsonl";
-    MockDataGenerator::generate_mock_data(temp_file_path, 20);
+    MockDataGenerator::generate_mock_data(temp_file_path, 20)?;
 
     // Setup the JSONL repository and service
     let repo = Arc::new(JsonlTelemetryRepo::new(PathBuf::from(temp_file_path)));
@@ -31,7 +31,6 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
 
     let addr = format!("127.0.0.1:{port}");
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
-
     println!("listening on {}", listener.local_addr().unwrap());
 
     //Start Server
