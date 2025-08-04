@@ -64,7 +64,7 @@ mod tests {
     use tokio::runtime::Runtime;
 
     #[test]
-    fn test_fetch_all_with_mock_data() {
+    fn test_fetch_all_with_mock_data() -> Result<(), DataError> {
         let rt = Runtime::new().unwrap();
 
         // Use a temporary file for testing
@@ -72,7 +72,7 @@ mod tests {
         std::fs::remove_file(temp_file_path).ok();
 
         // Generate mock data
-        MockDataGenerator::generate_mock_data(temp_file_path, 10);
+        MockDataGenerator::generate_mock_data(temp_file_path, 10)?;
 
         // Test the repository
         rt.block_on(async {
@@ -86,5 +86,6 @@ mod tests {
 
         // Clean up a test file
         std::fs::remove_file(temp_file_path).ok();
+        Ok(())
     }
 }
