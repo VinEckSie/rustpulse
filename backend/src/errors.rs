@@ -15,13 +15,13 @@ pub enum ConfigError {
 #[derive(Debug, Error)]
 pub enum DataError {
     #[error("Failed to open file at {path}: {source}")]
-    FileOpenError {
+    FileOpen {
         path: PathBuf,
         #[source]
         source: io::Error,
     },
     #[error("Failed to parse file")]
-    SerdeError(serde_json::Error),
+    Serde(serde_json::Error),
     #[error("IO Error")]
-    IoError(std::io::Error), //enable to wrap general IO errors
+    Io(std::io::Error), //enable to wrap general IO errors
 }

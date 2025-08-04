@@ -16,7 +16,7 @@ impl MockDataGenerator {
             .append(true)
             .open(path)
             //.expect("Failed to open path for writing mock data");
-            .map_err(|e| DataError::FileOpenError {
+            .map_err(|e| DataError::FileOpen {
                 path: PathBuf::from(path),
                 source: e,
             })?;
@@ -47,9 +47,9 @@ impl MockDataGenerator {
             };
 
             let telemetry_json =
-                serde_json::to_string(&mock_telemetry).map_err(DataError::SerdeError)?;
+                serde_json::to_string(&mock_telemetry).map_err(DataError::Serde)?;
 
-            writeln!(file, "{telemetry_json}").map_err(DataError::IoError)?;
+            writeln!(file, "{telemetry_json}").map_err(DataError::Io)?;
         }
         Ok(())
     }
