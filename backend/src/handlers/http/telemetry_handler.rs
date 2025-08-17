@@ -3,7 +3,7 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Json, Router, extract::State, response::IntoResponse};
+use axum::{extract::State, response::IntoResponse, Router};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -32,7 +32,13 @@ pub async fn fetch_telemetry_handler(
     let node_id = params.get("node_id").cloned();
 
     match service.fetch_all(node_id).await {
-        Ok(metrics) => Json(metrics).into_response(),
+        Ok(metrics) => {
+            // Json(metrics).into_response(),
+
+            //only test purposes cause high payload for pretty Json
+            let json = serde_json::to_string_pretty(&metrics).unwrap();
+            (StatusCode::OK, json).into_response()
+        }
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }

@@ -1,5 +1,6 @@
 use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
 use crate::app::telemetry_service::TelemetryService;
+#[cfg(feature = "mock-data")]
 use crate::core::port::telemetry_mock_repo::MockDataGenerator;
 use crate::handlers::http;
 use axum::Router;
@@ -11,6 +12,8 @@ use tracing::Level;
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     // Create mock data for testing
     let temp_file_path = "metrics_data.jsonl";
+
+    #[cfg(feature = "mock-data")]
     MockDataGenerator::generate_mock_data(temp_file_path, 20)?;
 
     // Setup the JSONL repository and service
