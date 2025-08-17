@@ -46,10 +46,10 @@ impl TelemetryRepository for JsonlTelemetryRepo {
 
             match &node_id {
                 Some(id_str) => {
-                    if let Ok(id) = Uuid::parse_str(id_str) {
-                        if parsed.node_id == id {
-                            result.push(parsed);
-                        }
+                    if let Ok(id) = Uuid::parse_str(id_str)
+                        && parsed.node_id == id
+                    {
+                        result.push(parsed);
                     }
                 }
                 None => result.push(parsed),
