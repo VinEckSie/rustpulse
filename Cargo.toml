@@ -4,3 +4,6 @@ members = [
     "frontend",
 ]
 resolver = "3"
+
+[patch.crates-io]
+paste = { git = "ssh://git@github.com/andamira/pastey.git", tag = "v0.1.1" }
