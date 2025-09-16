@@ -3,7 +3,7 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Router, extract::State, response::IntoResponse};
+use axum::{extract::State, response::IntoResponse, Router};
 use std::collections::HashMap;
 use std::sync::Arc;
 
@@ -42,20 +42,3 @@ pub async fn fetch_telemetry_handler(
         Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
     }
 }
-
-// pub async fn ingest_telemetry_handler(
-//     State(service): State<Arc<dyn TelemetryIngestCase>>,
-//     Json(payload): Json<TelemetryDto>,
-// ) -> impl IntoResponse {
-//     let telemetry = NodeTelemetry {
-//         node_id: payload.node_id,
-//         cpu: payload.cpu,
-//         memory: payload.memory,
-//         timestamp: payload.timestamp,
-//     };
-//
-//     match service.ingest(telemetry).await {
-//         Ok(_) => StatusCode::CREATED,
-//         Err(_) => StatusCode::INTERNAL_SERVER_ERROR,
-//     }
-// }

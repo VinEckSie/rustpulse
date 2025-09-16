@@ -1,6 +1,8 @@
 use axum::http::StatusCode;
 use serde_json::json;
 
+//run ?
+//duplicate ?
 #[tokio::test]
 async fn health_check_works() {
     let app = spawn_app().await;
@@ -9,6 +11,22 @@ async fn health_check_works() {
     let response = client
         .get(format!("{}/health", app.address))
         .send()
+        .await
+        .unwrap();
+
+    assert_eq!(response.status(), StatusCode::OK);
+}
+
+#[tokio::test]
+async fn test_health_check() {
+    let app = crate::startup::app(); // Use your actual router setup
+    let response = app
+        .oneshot(
+            Request::builder()
+                .uri("/health")
+                .body(Body::empty())
+                .unwrap(),
+        )
         .await
         .unwrap();
 
@@ -47,19 +65,4 @@ async fn fetch_nonexistent_event_returns_404() {
         .unwrap();
 
     assert_eq!(response.status(), StatusCode::NOT_FOUND);
-}
-#[tokio::test]
-async fn test_health_check() {
-    let app = crate::startup::app(); // Use your actual router setup
-    let response = app
-        .oneshot(
-            Request::builder()
-                .uri("/health")
-                .body(Body::empty())
-                .unwrap(),
-        )
-        .await
-        .unwrap();
-
-    assert_eq!(response.status(), StatusCode::OK);
 }
