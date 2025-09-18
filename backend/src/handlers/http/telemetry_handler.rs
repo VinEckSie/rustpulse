@@ -1,5 +1,4 @@
 use crate::core::port::telemetry_query_case::TelemetryQueryCase;
-// use reqwest::get;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
@@ -14,10 +13,6 @@ pub struct TelemetryDto {
     pub memory: f32,
     pub timestamp: i64,
 }
-
-// pub fn routes() -> Router {
-//     Router::new().route("/metrics", get(fetch_telemetry_handler))
-// }
 
 pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
     Router::new()

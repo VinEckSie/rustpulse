@@ -2,7 +2,6 @@ use crate::errors::ConfigError;
 use dotenvy::dotenv;
 
 pub struct Config {
-    //pub db_url: String,
     pub log_json: bool,
     pub port: u16,
 }
@@ -25,7 +24,6 @@ impl Config {
         };
 
         Ok(Self {
-            //db_url: std::env::var("DATABASE_URL")?,
             log_json: std::env::var("LOG_JSON").map(|v| v == "1").unwrap_or(false),
             port,
         })
