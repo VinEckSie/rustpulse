@@ -2,10 +2,10 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{extract::State, response::IntoResponse, Router};
+use axum::{Router, extract::State, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
-use tracing::{error, info, instrument};
+// use tracing::{error, info, instrument};
 
 #[derive(serde::Deserialize)]
 pub struct TelemetryDto {
