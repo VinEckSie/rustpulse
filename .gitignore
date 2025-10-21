@@ -17,3 +17,7 @@ target/
 #.idea/
 .env
 backend/.env
+
+  # Temporary testing files
+  *.jsonl
+  *.tmp

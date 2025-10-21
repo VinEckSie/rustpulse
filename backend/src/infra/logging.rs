@@ -1,25 +1,26 @@
 use tracing_appender::rolling;
-use tracing_subscriber::{EnvFilter, fmt};
+use tracing_subscriber::{fmt, EnvFilter};
 
 pub fn init(log_json: bool) {
     //Init Logs
     let logfile = rolling::daily("./logs", "info");
 
     //Subscriber
-    let subscriber = fmt()
+    let layer = fmt()
         .with_env_filter(
             EnvFilter::try_from_default_env()
-                .unwrap_or_else(|_| EnvFilter::new("backend=info,tower_http=info")),
+                .unwrap_or_else(|_| EnvFilter::new("backend=info,tower_http=info,backend::handlers::http::telemetry_handler=info,tower_http=info")),
         )
         .with_target(false)
-        .with_writer(logfile)
+        .with_level(true)
         .with_max_level(tracing::Level::TRACE)
+        .with_writer(logfile)
         .with_ansi(false);
 
     if log_json {
-        subscriber.json().init();
+        layer.json().init();
     } else {
-        subscriber.compact().init();
+        layer.compact().init();
     }
 }
 

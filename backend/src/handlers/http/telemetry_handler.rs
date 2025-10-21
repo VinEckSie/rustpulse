@@ -2,9 +2,10 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Router, extract::State, response::IntoResponse};
+use axum::{extract::State, response::IntoResponse, Router};
 use std::collections::HashMap;
 use std::sync::Arc;
+use tracing::{error, info, instrument};
 
 #[derive(serde::Deserialize)]
 pub struct TelemetryDto {
@@ -26,14 +27,22 @@ pub async fn fetch_telemetry_handler(
 ) -> impl IntoResponse {
     let node_id = params.get("node_id").cloned();
 
+    tracing::info!(node_id = ?node_id, "Fetching telemetry metrics for the given node");
+
     match service.fetch_all(node_id).await {
         Ok(metrics) => {
-            // Json(metrics).into_response(),
+            tracing::info!(
+                metrics_count = metrics.len(),
+                "Fetched metrics successfully."
+            );
 
             //only test purposes cause high payload for pretty Json
             let json = serde_json::to_string_pretty(&metrics).unwrap();
             (StatusCode::OK, json).into_response()
         }
-        Err(_) => StatusCode::INTERNAL_SERVER_ERROR.into_response(),
+        Err(_) => {
+            tracing::error!("Failed to fetch metrics");
+            StatusCode::INTERNAL_SERVER_ERROR.into_response()
+        }
     }
 }

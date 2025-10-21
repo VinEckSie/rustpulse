@@ -16,8 +16,6 @@ test:
 audit:
     cargo audit
 
-# RUN MANUALLY:
-
 # Code Coverage
 coverage:
     cargo tarpaulin --out Html --output-dir coverage
@@ -36,6 +34,9 @@ check:
     just lint
     just test
     just audit
+    just coverage
+    just machete
+    just doc
 
 fmt-check:
     cargo fmt --check || true

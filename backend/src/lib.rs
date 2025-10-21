@@ -14,7 +14,6 @@ pub async fn start() -> Result<(), Box<dyn std::error::Error>> {
     let config = Config::from_env().expect("Invalid configuration");
 
     init_logging(config.log_json);
-    // let pool = db::connect(&config.db_url).await?; // when ready
 
     start_server(config.port).await
 }
