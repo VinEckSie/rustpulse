@@ -1,5 +1,6 @@
 use crate::errors::ConfigError;
 use dotenvy::dotenv;
+use tracing::instrument;
 
 pub struct Config {
     pub log_json: bool,
@@ -8,6 +9,7 @@ pub struct Config {
 
 impl Config {
     #[allow(clippy::manual_inspect)]
+    #[instrument]
     pub fn from_env() -> Result<Self, ConfigError> {
         // Initialize dotenv within the method
         dotenv().ok();

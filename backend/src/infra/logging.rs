@@ -1,6 +1,8 @@
+use tracing::instrument;
 use tracing_appender::rolling;
 use tracing_subscriber::{EnvFilter, fmt};
 
+#[instrument]
 pub fn init(log_json: bool) {
     //Init Logs
     let logfile = rolling::daily("./logs", "info");

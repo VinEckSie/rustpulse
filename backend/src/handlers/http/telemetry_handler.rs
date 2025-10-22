@@ -5,7 +5,7 @@ use axum::routing::get;
 use axum::{Router, extract::State, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
-// use tracing::{error, info, instrument};
+use tracing::instrument;
 
 #[derive(serde::Deserialize)]
 pub struct TelemetryDto {
@@ -15,19 +15,23 @@ pub struct TelemetryDto {
     pub timestamp: i64,
 }
 
+#[instrument(level = "info", skip(service))]
 pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
     Router::new()
         .route("/metrics", get(fetch_telemetry_handler))
         .with_state(service)
 }
 
+#[instrument(name = "fetch telemetry", skip(service), fields(node_id = params.get("node_id").cloned()))]
+// #[instrument(skip(service), field(node_id = params.get("node_id").cloned()))]
 pub async fn fetch_telemetry_handler(
     State(service): State<Arc<dyn TelemetryQueryCase>>,
     Query(params): Query<HashMap<String, String>>,
 ) -> impl IntoResponse {
     let node_id = params.get("node_id").cloned();
 
-    tracing::info!(node_id = ?node_id, "Fetching telemetry metrics for the given node");
+    // tracing::info!(node_id = ?node_id, "Fetching telemetry metrics for the given node");
+    tracing::info!("Fetching telemetry metrics for the given node (if selected)");
 
     match service.fetch_all(node_id).await {
         Ok(metrics) => {

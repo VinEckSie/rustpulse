@@ -7,8 +7,9 @@ use axum::Router;
 use std::path::PathBuf;
 use std::sync::Arc;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::Level;
+use tracing::{Level, instrument};
 
+#[instrument(level = "info")]
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     // Create mock data for testing
     let temp_file_path = "metrics_data.jsonl";
