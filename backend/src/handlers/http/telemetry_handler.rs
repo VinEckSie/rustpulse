@@ -2,7 +2,7 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{extract::State, response::IntoResponse, Router};
+use axum::{Router, extract::State, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tracing::instrument;
@@ -24,7 +24,7 @@ pub async fn fetch_telemetry_handler(
     let span = tracing::Span::current();
 
     if let Some(source_id) = params.get("source_id") {
-        span.record("source_id", &source_id.as_str());
+        span.record("source_id", source_id.as_str());
     }
 
     let source_id = params.get("source_id").cloned();

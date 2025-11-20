@@ -1,5 +1,5 @@
 use axum::http::StatusCode;
-use axum::{routing::get, Router};
+use axum::{Router, routing::get};
 
 pub fn routes() -> Router {
     Router::new().route("/favicon.ico", get(favicon_handler))

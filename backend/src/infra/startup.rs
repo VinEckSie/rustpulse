@@ -5,9 +5,8 @@ use crate::handlers::http;
 use axum::Router;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tokio::spawn;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::{instrument, Level};
+use tracing::{Level, instrument};
 
 #[instrument(level = "info")]
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
@@ -20,7 +19,7 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
 
     MockDataGenerator::generate_mock_data(&temp_file_path, 20)?;
     // Set up the JSONL repository and service
-    let repo = Arc::new(JsonlTelemetryRepo::new(PathBuf::from(temp_file_path)));
+    let repo = Arc::new(JsonlTelemetryRepo::new(temp_file_path));
     let service = Arc::new(TelemetryService::new(repo.clone()));
 
     //Build Router

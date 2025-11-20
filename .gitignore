@@ -20,4 +20,6 @@ backend/.env
 
   # Temporary testing files
   *.jsonl
-  *.tmp
+  *.tmp.DS_Store
+.idea/
+coverage/

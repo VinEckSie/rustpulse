@@ -17,7 +17,7 @@ pub struct Telemetry {
 }
 
 impl Telemetry {
-    fn empty(source_id: Uuid, server_id: Uuid) -> Self {
+    fn _empty(source_id: Uuid, server_id: Uuid) -> Self {
         Self {
             source_id,
             server_id,

@@ -1,4 +1,4 @@
-use axum::{response::Html, routing::get, Router};
+use axum::{Router, response::Html, routing::get};
 
 pub fn routes() -> Router {
     Router::new().route("/", get(index_handler))
