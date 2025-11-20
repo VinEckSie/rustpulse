@@ -2,18 +2,10 @@ use crate::core::port::telemetry_query_case::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Router, extract::State, response::IntoResponse};
+use axum::{extract::State, response::IntoResponse, Router};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tracing::instrument;
-
-#[derive(serde::Deserialize)]
-pub struct TelemetryDto {
-    pub node_id: String,
-    pub cpu: f32,
-    pub memory: f32,
-    pub timestamp: i64,
-}
 
 #[instrument(level = "info", skip(service))]
 pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
@@ -22,22 +14,28 @@ pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
         .with_state(service)
 }
 
-#[instrument(name = "fetch telemetry", skip(service), fields(node_id = params.get("node_id").cloned()))]
-// #[instrument(skip(service), field(node_id = params.get("node_id").cloned()))]
+#[instrument(name = "fetch telemetry", skip(service), fields(
+    source_id = tracing::field::Empty
+))]
 pub async fn fetch_telemetry_handler(
     State(service): State<Arc<dyn TelemetryQueryCase>>,
     Query(params): Query<HashMap<String, String>>,
 ) -> impl IntoResponse {
-    let node_id = params.get("node_id").cloned();
+    let span = tracing::Span::current();
 
-    // tracing::info!(node_id = ?node_id, "Fetching telemetry metrics for the given node");
-    tracing::info!("Fetching telemetry metrics for the given node (if selected)");
+    if let Some(source_id) = params.get("source_id") {
+        span.record("source_id", &source_id.as_str());
+    }
 
-    match service.fetch_all(node_id).await {
+    let source_id = params.get("source_id").cloned();
+
+    //tracing::info!(node_id = ?node_id, "fetching telemetry metrics for the given node");
+
+    match service.fetch_all(source_id).await {
         Ok(metrics) => {
             tracing::info!(
                 metrics_count = metrics.len(),
-                "Fetched metrics successfully."
+                "fetched metrics successfully."
             );
 
             //only test purposes cause high payload for pretty Json

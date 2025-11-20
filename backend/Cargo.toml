@@ -34,6 +34,8 @@ async-trait = "0.1.88"
 ignored = ["serde_json", "serde", "thiserror", "anyhow"]
 
 [features]
-default = []
-parquet = []
-mock-data = []
+default = ["aero"]
+aero = []
+bio = []
+#parquet = []
+#mock_data = []

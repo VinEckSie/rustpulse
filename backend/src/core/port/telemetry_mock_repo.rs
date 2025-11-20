@@ -1,6 +1,6 @@
-use crate::core::domains::node_telemetry::NodeTelemetry;
+use crate::core::domains::telemetry::Telemetry;
 use crate::errors::DataError;
-use chrono::{Duration, Utc};
+use chrono::Utc;
 use rand::Rng;
 use std::fs::OpenOptions;
 use std::io::Write;
@@ -10,7 +10,7 @@ use uuid::Uuid;
 pub struct MockDataGenerator;
 
 impl MockDataGenerator {
-    pub fn generate_mock_data(path: &str, count: usize) -> Result<(), DataError> {
+    pub fn generate_mock_data(path: &PathBuf, count: usize) -> Result<(), DataError> {
         let mut file = OpenOptions::new()
             .create(true)
             .append(true)
@@ -24,26 +24,14 @@ impl MockDataGenerator {
         let mut rng = rand::thread_rng();
 
         for _ in 0..count {
-            let mock_telemetry = NodeTelemetry {
-                node_id: Uuid::new_v4(),
+            let mock_telemetry = Telemetry {
+                source_id: Uuid::new_v4(),
                 server_id: Uuid::new_v4(),
-                cpu: rng.gen_range(0.0..100.0),
-                memory: rng.gen_range(0.0..16000.0),
+                cpu: Option::from(rng.gen_range(0.0..100.0)),
+                memory: Option::from(rng.gen_range(0.0..16000.0)),
                 timestamp: Utc::now(),
-                connected_users: rng.gen_range(0..100),
-                network_usage: rng.gen_range(0.0..1.0),
-                disk_usage: rng.gen_range(0.0..100.0),
-                uptime: Duration::seconds(rng.gen_range(0..3600)),
-                errors_detected: Some(vec!["error1".to_string(), "error2".to_string()]),
-                anomaly: rng.gen_bool(0.1), // 10% chance of anomaly
-                battery_level: Some(rng.gen_range(0.0..100.0)),
                 temperature: Some(rng.gen_range(-10.0..50.0)),
-                signal_strength: Some(rng.gen_range(0.0..1.0)),
-                orientation: Some((
-                    rng.gen_range(-180.0..180.0),
-                    rng.gen_range(-180.0..180.0),
-                    rng.gen_range(-180.0..180.0),
-                )),
+                extras: Default::default(),
             };
 
             let telemetry_json =
@@ -68,15 +56,15 @@ mod tests {
         let rt = Runtime::new().unwrap();
 
         // Use a temporary file for testing
-        let temp_file_path = "test_data.jsonl";
-        std::fs::remove_file(temp_file_path).ok();
+        let temp_file_path: PathBuf =
+            PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("test_data.jsonl");
 
         // Generate mock data
-        MockDataGenerator::generate_mock_data(temp_file_path, 10)?;
+        MockDataGenerator::generate_mock_data(&temp_file_path, 10)?;
 
         // Test the repository
         rt.block_on(async {
-            let repo = JsonlTelemetryRepo::new(PathBuf::from(temp_file_path));
+            let repo = JsonlTelemetryRepo::new(PathBuf::from(&temp_file_path));
             let result = repo.query_all(None).await;
 
             assert!(result.is_ok());

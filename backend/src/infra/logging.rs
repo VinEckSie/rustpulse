@@ -1,6 +1,6 @@
 use tracing::instrument;
 use tracing_appender::rolling;
-use tracing_subscriber::{EnvFilter, fmt};
+use tracing_subscriber::{fmt, EnvFilter};
 
 #[instrument]
 pub fn init(log_json: bool) {
@@ -13,10 +13,10 @@ pub fn init(log_json: bool) {
             EnvFilter::try_from_default_env()
                 .unwrap_or_else(|_| EnvFilter::new("backend=info,tower_http=info,backend::handlers::http::telemetry_handler=info,tower_http=info")),
         )
-        .with_target(false)
-        .with_level(true)
-        .with_max_level(tracing::Level::TRACE)
         .with_writer(logfile)
+        .with_level(true)
+        .with_target(false)
+        .with_max_level(tracing::Level::TRACE)
         .with_ansi(false);
 
     if log_json {
@@ -24,6 +24,8 @@ pub fn init(log_json: bool) {
     } else {
         layer.compact().init();
     }
+
+    tracing::info!("rustpulse boot: logger initialised");
 }
 
 pub fn check_logs() {

@@ -4,6 +4,7 @@ use uuid::Uuid;
 
 #[allow(dead_code)]
 pub enum NodeType {
+    //Aerospace
     GroundStation,
     Simulator,
     Satellite,
@@ -34,18 +35,18 @@ struct Position {
 }
 
 // generalizes a satellite, a ground station, or a simulator
-#[allow(dead_code)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Node {
-    uuid: Uuid,
-    name: String,
-    pub server_type: NodeType,
-    ip: IpAddr,
-    status: NodeStatus,
-    tags: Vec<String>,
-    location: Option<String>,
-    last_heartbeat: DateTime<Utc>,
-    orbit: Option<OrbitParameters>,
-    position: Option<Position>,
+    pub id: Uuid,
+    pub name: String,
+    pub kind: NodeType,
+    pub ip: Option<IpAddr>,
+    pub status: NodeStatus,
+    pub tags: Vec<String>,
+    pub location: Option<String>,
+    pub last_heartbeat: Option<DateTime<Utc>>,
+    pub orbit: Option<Orbit>,
+    pub position: Option<Position>,
 }
 
 #[cfg(test)]

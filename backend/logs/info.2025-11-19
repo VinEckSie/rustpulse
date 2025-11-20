@@ -1,0 +1,74 @@
+2025-11-19T12:01:01.552873Z  INFO rustpulse boot: logger initialised
+2025-11-19T12:01:01.553359Z  INFO start_server: Using metrics data file temp_file_path="/Users/vinecksie/RustroverProjects/rustpulse/backend/metrics_data.jsonl" port=3000
+2025-11-19T12:01:20.247593Z TRACE start_server: connection 127.0.0.1:64310 accepted port=3000
+2025-11-19T12:01:20.257701Z  INFO request: started processing request method=GET uri=/ version=HTTP/1.1
+2025-11-19T12:01:20.257749Z  INFO request: serving RustPulse home page at http://localhost:3000/ method=GET uri=/ version=HTTP/1.1
+2025-11-19T12:01:20.257768Z  INFO request: finished processing request latency=1 ms status=200 method=GET uri=/ version=HTTP/1.1
+2025-11-19T12:01:20.460691Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:01:20.460810Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:07.998349Z TRACE start_server: connection 127.0.0.1:64314 accepted port=3000
+2025-11-19T12:02:08.004535Z  INFO request: started processing request method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:08.010241Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=120 method=GET uri=/metrics version=HTTP/1.1 params={}
+2025-11-19T12:02:08.013266Z  INFO request: finished processing request latency=9 ms status=200 method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:08.223569Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:08.223664Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:16.585178Z TRACE start_server: connection 127.0.0.1:64317 accepted port=3000
+2025-11-19T12:02:16.586109Z  INFO request: started processing request method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:16.589378Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=120 method=GET uri=/metrics version=HTTP/1.1 params={}
+2025-11-19T12:02:16.591707Z  INFO request: finished processing request latency=5 ms status=200 method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:16.638055Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:16.638161Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:23.582475Z TRACE start_server: connection 127.0.0.1:64326 accepted port=3000
+2025-11-19T12:02:23.584332Z  INFO request: started processing request method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:23.589236Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=120 method=GET uri=/metrics version=HTTP/1.1 params={}
+2025-11-19T12:02:23.591502Z  INFO request: finished processing request latency=7 ms status=200 method=GET uri=/metrics version=HTTP/1.1
+2025-11-19T12:02:24.369629Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:24.369778Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:45.078896Z TRACE start_server: connection 127.0.0.1:64334 accepted port=3000
+2025-11-19T12:02:45.085957Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:02:45.088993Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:02:45.089138Z  INFO request: finished processing request latency=3 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:02:45.244059Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:45.244228Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:56.953997Z TRACE start_server: connection 127.0.0.1:64342 accepted port=3000
+2025-11-19T12:02:56.955156Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:02:56.958853Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:02:56.959079Z  INFO request: finished processing request latency=3 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:02:57.004502Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:02:57.004628Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:11.482601Z TRACE start_server: connection 127.0.0.1:64384 accepted port=3000
+2025-11-19T12:04:11.490305Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:11.494247Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:11.494561Z  INFO request: finished processing request latency=4 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:11.672849Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:11.672955Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:12.396785Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:12.400758Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:12.401006Z  INFO request: finished processing request latency=4 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:12.434426Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:12.434542Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:12.728682Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:12.733469Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:12.734156Z  INFO request: finished processing request latency=5 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:12.773171Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:12.773286Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.042245Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.045196Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:13.045470Z  INFO request: finished processing request latency=3 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.083572Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.083657Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.232926Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.237022Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:13.237223Z  INFO request: finished processing request latency=4 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.273221Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.273324Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.398200Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.401885Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:13.402055Z  INFO request: finished processing request latency=3 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:13.436360Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:13.436459Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:14.277554Z  INFO request: started processing request method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:14.280489Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=0 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1 params={"source_id": "9f1f6dda-7ae2-493b-85f5-f4a9255be465"} source_id="9f1f6dda-7ae2-493b-85f5-f4a9255be465"
+2025-11-19T12:04:14.280658Z  INFO request: finished processing request latency=3 ms status=200 method=GET uri=/metrics?source_id=9f1f6dda-7ae2-493b-85f5-f4a9255be465 version=HTTP/1.1
+2025-11-19T12:04:14.314352Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-19T12:04:14.314452Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1

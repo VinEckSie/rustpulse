@@ -1,0 +1,17 @@
+2025-11-17T15:33:53.419463Z  INFO rustpulse boot: logger initialised
+2025-11-17T15:33:53.419642Z  INFO start_server: Using metrics data file temp_file_path="/Users/vinecksie/RustroverProjects/rustpulse/backend/metrics_data.jsonl" port=3000
+2025-11-17T15:51:41.165470Z TRACE start_server: connection 127.0.0.1:54979 accepted port=3000
+2025-11-17T15:51:43.152204Z TRACE start_server: connection 127.0.0.1:54980 accepted port=3000
+2025-11-17T15:51:43.179059Z  INFO request: started processing request method=GET uri=/metrics version=HTTP/1.1
+2025-11-17T15:51:43.192118Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=80 method=GET uri=/metrics version=HTTP/1.1 params={}
+2025-11-17T15:51:43.196296Z  INFO request: finished processing request latency=24 ms status=200 method=GET uri=/metrics version=HTTP/1.1
+2025-11-17T15:51:43.461886Z TRACE start_server: connection 127.0.0.1:54981 accepted port=3000
+2025-11-17T15:51:43.479063Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-17T15:51:43.479547Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-17T15:52:53.537096Z TRACE start_server: connection 127.0.0.1:54988 accepted port=3000
+2025-11-17T15:52:54.357252Z TRACE start_server: connection 127.0.0.1:54989 accepted port=3000
+2025-11-17T15:52:54.361515Z  INFO request: started processing request method=GET uri=/metrics?source_id=a4144b1e-09ca-445e-8799-b8e48a7a6610 version=HTTP/1.1
+2025-11-17T15:52:54.364607Z  INFO request:fetch telemetry: fetched metrics successfully. metrics_count=1 method=GET uri=/metrics?source_id=a4144b1e-09ca-445e-8799-b8e48a7a6610 version=HTTP/1.1 params={"source_id": "a4144b1e-09ca-445e-8799-b8e48a7a6610"} source_id="a4144b1e-09ca-445e-8799-b8e48a7a6610"
+2025-11-17T15:52:54.365088Z  INFO request: finished processing request latency=5 ms status=200 method=GET uri=/metrics?source_id=a4144b1e-09ca-445e-8799-b8e48a7a6610 version=HTTP/1.1
+2025-11-17T15:52:54.652429Z  INFO request: started processing request method=GET uri=/favicon.ico version=HTTP/1.1
+2025-11-17T15:52:54.652637Z  INFO request: finished processing request latency=0 ms status=204 method=GET uri=/favicon.ico version=HTTP/1.1

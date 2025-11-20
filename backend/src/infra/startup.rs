@@ -1,23 +1,25 @@
 use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
 use crate::app::telemetry_service::TelemetryService;
-#[cfg(feature = "mock-data")]
 use crate::core::port::telemetry_mock_repo::MockDataGenerator;
 use crate::handlers::http;
 use axum::Router;
 use std::path::PathBuf;
 use std::sync::Arc;
+use tokio::spawn;
 use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::{Level, instrument};
+use tracing::{instrument, Level};
 
 #[instrument(level = "info")]
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
-    // Create mock data for testing
-    let temp_file_path = "metrics_data.jsonl";
+    // Create mock data
+    let temp_file_path: PathBuf =
+        PathBuf::from(env!("CARGO_MANIFEST_DIR")).join("metrics_data.jsonl");
 
-    #[cfg(feature = "mock-data")]
-    MockDataGenerator::generate_mock_data(temp_file_path, 20)?;
+    // (Optional) log the path for debugging
+    tracing::info!(?temp_file_path, "Using metrics data file");
 
-    // Setup the JSONL repository and service
+    MockDataGenerator::generate_mock_data(&temp_file_path, 20)?;
+    // Set up the JSONL repository and service
     let repo = Arc::new(JsonlTelemetryRepo::new(PathBuf::from(temp_file_path)));
     let service = Arc::new(TelemetryService::new(repo.clone()));
 
@@ -26,6 +28,7 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
         .merge(http::root_handler::routes())
         .merge(http::health_handler::routes())
         .merge(http::telemetry_handler::routes(service)) // now injecting state
+        .merge(http::favicon_handler::routes())
         .layer(
             TraceLayer::new_for_http()
                 .make_span_with(DefaultMakeSpan::new().level(Level::INFO))

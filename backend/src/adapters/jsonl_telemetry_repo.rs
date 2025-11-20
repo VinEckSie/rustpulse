@@ -1,5 +1,5 @@
 // adapter/jsonl/telemetry_repo.rs
-use crate::core::domains::node_telemetry::NodeTelemetry;
+use crate::core::domains::telemetry::Telemetry;
 use crate::core::port::telemetry_repo::TelemetryRepository;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};
@@ -23,7 +23,7 @@ impl JsonlTelemetryRepo {
 
 #[async_trait::async_trait]
 impl TelemetryRepository for JsonlTelemetryRepo {
-    async fn save(&self, telemetry: NodeTelemetry) -> anyhow::Result<()> {
+    async fn save(&self, telemetry: Telemetry) -> anyhow::Result<()> {
         let _guard = self.lock.lock().await;
         let mut file = OpenOptions::new()
             .create(true)
@@ -34,7 +34,7 @@ impl TelemetryRepository for JsonlTelemetryRepo {
         Ok(())
     }
 
-    async fn query_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<NodeTelemetry>> {
+    async fn query_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<Telemetry>> {
         let file = OpenOptions::new().read(true).open(&self.path)?;
         let reader = BufReader::new(file);
 
@@ -42,12 +42,12 @@ impl TelemetryRepository for JsonlTelemetryRepo {
 
         for line in reader.lines() {
             let line = line?;
-            let parsed: NodeTelemetry = serde_json::from_str(&line)?;
+            let parsed: Telemetry = serde_json::from_str(&line)?;
 
             match &node_id {
                 Some(id_str) => {
                     if let Ok(id) = Uuid::parse_str(id_str)
-                        && parsed.node_id == id
+                        && parsed.source_id == id
                     {
                         result.push(parsed);
                     }
