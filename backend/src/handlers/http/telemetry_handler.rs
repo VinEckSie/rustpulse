@@ -29,8 +29,6 @@ pub async fn fetch_telemetry_handler(
 
     let source_id = params.get("source_id").cloned();
 
-    //tracing::info!(node_id = ?node_id, "fetching telemetry metrics for the given node");
-
     match service.fetch_all(source_id).await {
         Ok(metrics) => {
             tracing::info!(

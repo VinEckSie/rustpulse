@@ -21,16 +21,16 @@ impl MockDataGenerator {
                 source: e,
             })?;
 
-        let mut rng = rand::thread_rng();
+        let mut rng = rand::rng();
 
         for _ in 0..count {
             let mock_telemetry = Telemetry {
                 source_id: Uuid::new_v4(),
                 server_id: Uuid::new_v4(),
-                cpu: Option::from(rng.gen_range(0.0..100.0)),
-                memory: Option::from(rng.gen_range(0.0..16000.0)),
+                cpu: Option::from(rng.random_range(0.0..100.0)),
+                memory: Option::from(rng.random_range(0.0..16000.0)),
                 timestamp: Utc::now(),
-                temperature: Some(rng.gen_range(-10.0..50.0)),
+                temperature: Some(rng.random_range(-10.0..50.0)),
                 extras: Default::default(),
             };
 

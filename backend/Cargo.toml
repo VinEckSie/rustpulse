@@ -27,7 +27,7 @@ uuid = { version = "1", features = ["serde", "v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
 
-rand = "0.8.5"
+rand = "0.9.2"
 async-trait = "0.1.88"
 
 [package.metadata.cargo-machete]
@@ -37,5 +37,6 @@ ignored = ["serde_json", "serde", "thiserror", "anyhow"]
 default = ["aero"]
 aero = []
 bio = []
+tracing-backend = []
 #parquet = []
 #mock_data = []

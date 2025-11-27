@@ -32,3 +32,8 @@ coverage/
 *.jsonl
 *.tmp.DS_Store
 backend/src/handlers/scratch.rs
+
+# Logs
+logs/
+backend/logs/
+*.log
