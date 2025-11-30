@@ -125,7 +125,7 @@ src/
 ## 🧪 Development Notes
 
 This repository is a personal development project.
-It’s currently incomplete and not intended for reuse or redistribution.
+This project is an educational but production-grade architecture showcase for Rust backend systems.
 The goal is to showcase Rust architecture, testing, and systems design practices — not to provide a production-ready tool.
 
 
@@ -144,6 +144,7 @@ You may choose either license.
 
 Thanks for checking out RustPulse!  
 Follow the technical case study for deeper dives into its architecture, testing strategy, and telemetry runtime design in Rust.
+
 
 
 
