@@ -90,7 +90,5 @@ mod tests {
     fn test_load_metrics() {
         let repo: JsonlTelemetryRepo<String> = JsonlTelemetryRepo::new("mock-path.jsonl".into());
         let _data = repo.query_all(None);
-        todo!()
-        // Assuming 20 mock entries
     }
 }
