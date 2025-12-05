@@ -23,12 +23,12 @@ impl MockDataGenerator {
 
         let mut rng = rand::rng();
 
-        for _ in 0..count {
+        (0..count).try_for_each(|_| {
             let mock_telemetry = Telemetry {
                 source_id: Uuid::new_v4(),
                 server_id: Uuid::new_v4(),
-                cpu: Option::from(rng.random_range(0.0..100.0)),
-                memory: Option::from(rng.random_range(0.0..16000.0)),
+                cpu: Some(rng.random_range(0.0..100.0)),
+                memory: Some(rng.random_range(0.0..16000.0)),
                 timestamp: Utc::now(),
                 temperature: Some(rng.random_range(-10.0..50.0)),
                 extras: Default::default(),
@@ -37,8 +37,10 @@ impl MockDataGenerator {
             let telemetry_json =
                 serde_json::to_string(&mock_telemetry).map_err(DataError::Serde)?;
 
-            writeln!(file, "{telemetry_json}").map_err(DataError::Io)?;
-        }
+            // IMPORTANT: last expression must be the Result, no trailing `;`
+            writeln!(file, "{telemetry_json}").map_err(DataError::Io)
+        })?; // propagate DataError from try_for_each
+
         Ok(())
     }
 }
@@ -47,7 +49,7 @@ impl MockDataGenerator {
 mod tests {
     use super::*;
     use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
-    use crate::core::port::telemetry_repo::TelemetryRepository;
+    use crate::core::port::telemetry_repository::TelemetryRepository;
     use std::path::PathBuf;
     use tokio::runtime::Runtime;
 

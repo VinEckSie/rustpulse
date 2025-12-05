@@ -1,19 +1,18 @@
 // adapter/jsonl/telemetry_repo.rs
 use crate::core::domains::telemetry::Telemetry;
-use crate::core::port::telemetry_repo::TelemetryRepository;
+use crate::core::port::telemetry_repository::TelemetryRepository;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};
-use std::path::PathBuf;
 use tokio::sync::Mutex;
 use uuid::Uuid;
 
-pub struct JsonlTelemetryRepo {
-    pub path: PathBuf,
+pub struct JsonlTelemetryRepo<P: AsRef<std::path::Path>> {
+    pub path: P,
     pub lock: Mutex<()>,
 }
 
-impl JsonlTelemetryRepo {
-    pub fn new(path: PathBuf) -> Self {
+impl<P: AsRef<std::path::Path>> JsonlTelemetryRepo<P> {
+    pub fn new(path: P) -> Self {
         Self {
             path,
             lock: Mutex::new(()),
@@ -22,7 +21,10 @@ impl JsonlTelemetryRepo {
 }
 
 #[async_trait::async_trait]
-impl TelemetryRepository for JsonlTelemetryRepo {
+impl<P> TelemetryRepository for JsonlTelemetryRepo<P>
+where
+    P: AsRef<std::path::Path> + Send + Sync,
+{
     async fn save(&self, telemetry: Telemetry) -> anyhow::Result<()> {
         let _guard = self.lock.lock().await;
         let mut file = OpenOptions::new()
@@ -37,26 +39,45 @@ impl TelemetryRepository for JsonlTelemetryRepo {
     async fn query_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<Telemetry>> {
         let file = OpenOptions::new().read(true).open(&self.path)?;
         let reader = BufReader::new(file);
-
-        let mut result = Vec::new();
-
-        for line in reader.lines() {
+        let iter = reader.lines().map(|line| -> anyhow::Result<Telemetry> {
             let line = line?;
-            let parsed: Telemetry = serde_json::from_str(&line)?;
+            Ok(serde_json::from_str(&line)?)
+        });
 
-            match &node_id {
-                Some(id_str) => {
-                    if let Ok(id) = Uuid::parse_str(id_str)
-                        && parsed.source_id == id
-                    {
-                        result.push(parsed);
-                    }
-                }
-                None => result.push(parsed),
+        let result: anyhow::Result<Vec<Telemetry>> = match node_id {
+            Some(id_str) => {
+                let id = Uuid::parse_str(&id_str)?;
+                iter.filter_map(|res| match res {
+                    Ok(t) if t.source_id == id => Some(Ok(t)),
+                    Ok(_) => None,
+                    Err(e) => Some(Err(e)),
+                })
+                .collect()
             }
-        }
+            None => iter.collect(),
+        };
 
-        Ok(result)
+        result
+
+        // let mut result = Vec::new();
+
+        // for line in reader.lines() {
+        //     let line = line?;
+        //     let parsed: Telemetry = serde_json::from_str(&line)?;
+
+        //     match &node_id {
+        //         Some(id_str) => {
+        //             if let Ok(id) = Uuid::parse_str(id_str)
+        //                 && parsed.source_id == id
+        //             {
+        //                 result.push(parsed);
+        //             }
+        //         }
+        //         None => result.push(parsed),
+        //     }
+        // }
+
+        // Ok(result)
     }
 }
 
@@ -67,8 +88,9 @@ mod tests {
 
     #[test]
     fn test_load_metrics() {
-        let _repo = JsonlTelemetryRepo::new("mock-path.jsonl".into());
-        //let data = repo.load().unwrap();
-        //assert_eq!(data.len(), 20); // Assuming 20 mock entries
+        let repo: JsonlTelemetryRepo<String> = JsonlTelemetryRepo::new("mock-path.jsonl".into());
+        let _data = repo.query_all(None);
+        todo!()
+        // Assuming 20 mock entries
     }
 }

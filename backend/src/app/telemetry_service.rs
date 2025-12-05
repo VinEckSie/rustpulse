@@ -4,32 +4,28 @@
 use crate::core::domains::telemetry::Telemetry;
 use crate::core::port::telemetry_ingest_case::TelemetryIngestCase;
 use crate::core::port::telemetry_query_case::TelemetryQueryCase;
-use crate::core::port::telemetry_repo::TelemetryRepository;
+use crate::core::port::telemetry_repository::TelemetryRepository;
 use std::sync::Arc;
 
-pub struct TelemetryService<TelemetryRepo: TelemetryRepository> {
-    repo: Arc<TelemetryRepo>,
+pub struct TelemetryService {
+    repo: Arc<dyn TelemetryRepository + Send + Sync>,
 }
 
-impl<TelemetryRepo: TelemetryRepository> TelemetryService<TelemetryRepo> {
-    pub fn new(repo: Arc<TelemetryRepo>) -> Self {
+impl TelemetryService {
+    pub fn new(repo: Arc<dyn TelemetryRepository + Send + Sync>) -> Self {
         // Accept Arc instead of plain type
         Self { repo }
     }
 }
 
 #[async_trait::async_trait]
-impl<TelemetryRepo: TelemetryRepository + Send + Sync> TelemetryQueryCase
-    for TelemetryService<TelemetryRepo>
-{
+impl TelemetryQueryCase for TelemetryService {
     async fn fetch_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<Telemetry>> {
         self.repo.query_all(node_id).await
     }
 }
 #[async_trait::async_trait]
-impl<TelemetryRepo: TelemetryRepository + Send + Sync> TelemetryIngestCase
-    for TelemetryService<TelemetryRepo>
-{
+impl TelemetryIngestCase for TelemetryService {
     async fn ingest(&self, telemetry: Telemetry) -> anyhow::Result<()> {
         self.repo.save(telemetry).await
     }

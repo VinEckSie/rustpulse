@@ -29,7 +29,5 @@ pub fn init(log_json: bool) {
 }
 
 pub fn check_logs() {
-    for (key, value) in std::env::vars() {
-        println!("{key} = {value}");
-    }
+    std::env::vars().for_each(|(key, value)| println!("{key} = {value}"));
 }
