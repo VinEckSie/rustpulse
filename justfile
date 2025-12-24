@@ -38,12 +38,19 @@ check:
     just machete
     just doc
 
-fmt-check:
-    cargo fmt --check || true
-
 # Automatically rerun all checks on file change
 watch-dev:
-    cargo watch -s "just fmt-check && just test" --ignore coverage --ignore target --ignore docs
+	cargo watch -s "cargo test" --ignore coverage --ignore target --ignore docs
 
-watch-ci:
-    cargo watch -d 3 -s "just check" --ignore coverage --ignore target --ignore docs
+# Local dev (Jaeger + backend)
+jaeger:
+    docker run --rm --name rustpulse-jaeger -p 16686:16686 -p 4317:4317 -e COLLECTOR_OTLP_ENABLED=true jaegertracing/all-in-one:latest
+
+jaeger-stop:
+    docker stop rustpulse-jaeger || true
+
+backend:
+    cargo run -p backend --bin rustpulse
+
+dev:
+    @echo "Run 'just jaeger' in one terminal, then 'just backend' in another."

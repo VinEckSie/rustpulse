@@ -1,11 +1,9 @@
 pub mod adapters;
-pub mod app;
 pub mod config;
 pub mod core;
 
 mod errors;
 // pub mod features;
-pub mod handlers;
 pub mod infra;
 
 use config::Config;

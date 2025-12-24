@@ -4,16 +4,15 @@ use uuid::Uuid;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Telemetry {
-    pub source_id: Uuid,          // node (aero) or device (bio)
-    pub server_id: Uuid,          // collector id
-    pub timestamp: DateTime<Utc>, // sample time
+    pub source_id: Uuid,
+    pub server_id: Uuid,
+    pub timestamp: DateTime<Utc>,
     // Generic metrics (cross-domain)
     pub cpu: Option<f64>,
     pub memory: Option<f64>,
     pub temperature: Option<f32>,
     // Optional domain-specific metrics go here as a loosed bag
-    // so the shared pipeline stays stable.
-    pub extras: serde_json::Value, // {} by default; attach domain fields if needed
+    pub extras: serde_json::Value,
 }
 
 impl Telemetry {

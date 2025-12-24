@@ -1,10 +1,7 @@
-// use crate::core::domains::node_telemetry::NodeTelemetry;
-// use crate::core::port::;
-
 use crate::core::domains::telemetry::Telemetry;
-use crate::core::port::telemetry_ingest_case::TelemetryIngestCase;
-use crate::core::port::telemetry_query_case::TelemetryQueryCase;
-use crate::core::port::telemetry_repository::TelemetryRepository;
+use crate::core::application::telemetry::ports::input::telemetry_ingest_usecase::TelemetryIngestCase;
+use crate::core::application::telemetry::ports::input::telemetry_query_usecase::TelemetryQueryCase;
+use crate::core::application::telemetry::ports::output::telemetry_repository::TelemetryRepository;
 use std::sync::Arc;
 
 pub struct TelemetryService {
@@ -31,11 +28,11 @@ impl TelemetryIngestCase for TelemetryService {
     }
 }
 
-// Example: app/telemetry_service.rs
+// Example: core/application/telemetry/usecases/telemetry_service.rs
 // #[cfg(test)]
 // mod tests {
 //     use super::*;
-//     use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
+//     use crate::adapters::output::jsonl_repo::JsonlTelemetryRepo;
 //
 //     #[tokio::test]
 //     async fn test_telemetry_service() {

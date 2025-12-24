@@ -1,4 +1,4 @@
-use crate::core::port::telemetry_query_case::TelemetryQueryCase;
+use crate::core::application::telemetry::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;

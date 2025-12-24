@@ -1,2 +1,0 @@
-2025-11-18T12:06:56.831028Z  INFO rustpulse boot: logger initialised
-2025-11-18T12:06:56.831307Z  INFO start_server: Using metrics data file temp_file_path="/Users/vinecksie/RustroverProjects/rustpulse/backend/metrics_data.jsonl" port=3000

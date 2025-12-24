@@ -1,6 +1,6 @@
 // adapter/jsonl/telemetry_repo.rs
 use crate::core::domains::telemetry::Telemetry;
-use crate::core::port::telemetry_repository::TelemetryRepository;
+use crate::core::application::telemetry::TelemetryRepository;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};
 use tokio::sync::Mutex;
@@ -58,26 +58,6 @@ where
         };
 
         result
-
-        // let mut result = Vec::new();
-
-        // for line in reader.lines() {
-        //     let line = line?;
-        //     let parsed: Telemetry = serde_json::from_str(&line)?;
-
-        //     match &node_id {
-        //         Some(id_str) => {
-        //             if let Ok(id) = Uuid::parse_str(id_str)
-        //                 && parsed.source_id == id
-        //             {
-        //                 result.push(parsed);
-        //             }
-        //         }
-        //         None => result.push(parsed),
-        //     }
-        // }
-
-        // Ok(result)
     }
 }
 

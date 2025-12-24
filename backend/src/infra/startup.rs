@@ -1,7 +1,7 @@
-use crate::adapters::jsonl_telemetry_repo::JsonlTelemetryRepo;
-use crate::app::telemetry_service::TelemetryService;
-use crate::core::port::telemetry_mock_repo::MockDataGenerator;
-use crate::handlers::http;
+use crate::adapters::input::http;
+use crate::adapters::output::jsonl_repo::JsonlTelemetryRepo;
+use crate::core::application::telemetry::TelemetryService;
+use crate::infra::mock_telemetry::MockDataGenerator;
 use axum::Router;
 use std::path::PathBuf;
 use std::sync::Arc;
