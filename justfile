@@ -8,6 +8,13 @@ fmt:
 lint:
     cargo clippy -- -D warnings
 
+# Auto-fix clippy lints (when possible)
+fix:
+    cargo fmt
+    cargo clippy --fix --allow-dirty --allow-staged
+    cargo fmt
+    cargo clippy -- -D warnings
+
 # Run tests
 test:
     cargo test
@@ -30,7 +37,7 @@ doc:
 
 # Run all checks
 check:
-    just fmt
+    just fix
     just lint
     just test
     just audit

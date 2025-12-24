@@ -1,7 +1,7 @@
-use crate::core::domains::telemetry::Telemetry;
 use crate::core::application::telemetry::ports::input::telemetry_ingest_usecase::TelemetryIngestCase;
 use crate::core::application::telemetry::ports::input::telemetry_query_usecase::TelemetryQueryCase;
 use crate::core::application::telemetry::ports::output::telemetry_repository::TelemetryRepository;
+use crate::core::domains::telemetry::Telemetry;
 use std::sync::Arc;
 
 pub struct TelemetryService {

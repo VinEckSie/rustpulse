@@ -1,6 +1,6 @@
 // adapter/jsonl/telemetry_repo.rs
-use crate::core::domains::telemetry::Telemetry;
 use crate::core::application::telemetry::TelemetryRepository;
+use crate::core::domains::telemetry::Telemetry;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};
 use tokio::sync::Mutex;

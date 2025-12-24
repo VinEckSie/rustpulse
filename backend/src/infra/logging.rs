@@ -103,12 +103,11 @@ pub fn init(log_json: bool) {
     tracing::info!("rustpulse boot: logger initialised");
 
     //emits exactly one “exporter initialized” log + a minimal startup span when OTEL_EXPORTER_OTLP_ENDPOINT is set.
-    if subscriber_installed {
-        if let (crate::infra::tracing::TracingStatus::Active, Some(meta)) = (status, exporter_meta)
-        {
-            crate::infra::tracing::emit_exporter_initialized_log(&meta);
-            crate::infra::tracing::emit_startup_span();
-        }
+    if subscriber_installed
+        && let (crate::infra::tracing::TracingStatus::Active, Some(meta)) = (status, exporter_meta)
+    {
+        crate::infra::tracing::emit_exporter_initialized_log(&meta);
+        crate::infra::tracing::emit_startup_span();
     }
 }
 

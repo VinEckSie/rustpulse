@@ -126,7 +126,7 @@ pub fn init_tracing(config: &TracingConfig) -> Result<TracingInit, TracingInitEr
         .build();
 
     let tracer = provider.tracer("rustpulse-backend");
-    let _ = global::set_tracer_provider(provider);
+    global::set_tracer_provider(provider);
 
     Ok(TracingInit {
         status: TracingStatus::Active,
