@@ -1,7 +1,11 @@
-use axum::{extract::{MatchedPath, Request}, middleware::Next, response::Response};
+use axum::{
+    extract::{MatchedPath, Request},
+    middleware::Next,
+    response::Response,
+};
 use opentelemetry::trace::TraceContextExt as _;
-use tracing::field;
 use tracing::Instrument as _;
+use tracing::field;
 use tracing_opentelemetry::OpenTelemetrySpanExt as _;
 
 pub async fn trace_middleware(req: Request, next: Next) -> Response {
@@ -40,7 +44,7 @@ pub async fn trace_middleware(req: Request, next: Next) -> Response {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use axum::{body::Body, http::Request as HttpRequest, middleware, routing::get, Router};
+    use axum::{Router, body::Body, http::Request as HttpRequest, middleware, routing::get};
     use std::collections::{BTreeMap, HashMap};
     use std::fmt;
     use std::sync::{Arc, Mutex};
@@ -48,8 +52,8 @@ mod tests {
     use tracing::Subscriber;
     use tracing::field::{Field, Visit};
     use tracing::span::{Attributes, Id, Record};
-    use tracing_subscriber::{Layer, layer::Context, prelude::*};
     use tracing_subscriber::registry::LookupSpan;
+    use tracing_subscriber::{Layer, layer::Context, prelude::*};
 
     #[derive(Clone, Default)]
     struct Captured(Arc<Mutex<HashMap<u64, CapturedSpan>>>);
@@ -77,19 +81,23 @@ mod tests {
 
     impl<'a> Visit for FieldVisitor<'a> {
         fn record_str(&mut self, field: &Field, value: &str) {
-            self.fields.insert(field.name().to_string(), value.to_string());
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
         }
 
         fn record_u64(&mut self, field: &Field, value: u64) {
-            self.fields.insert(field.name().to_string(), value.to_string());
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
         }
 
         fn record_i64(&mut self, field: &Field, value: i64) {
-            self.fields.insert(field.name().to_string(), value.to_string());
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
         }
 
         fn record_bool(&mut self, field: &Field, value: bool) {
-            self.fields.insert(field.name().to_string(), value.to_string());
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
         }
 
         fn record_debug(&mut self, field: &Field, value: &dyn fmt::Debug) {
@@ -104,7 +112,9 @@ mod tests {
     {
         fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, _ctx: Context<'_, S>) {
             let mut fields = BTreeMap::new();
-            attrs.record(&mut FieldVisitor { fields: &mut fields });
+            attrs.record(&mut FieldVisitor {
+                fields: &mut fields,
+            });
 
             let span = CapturedSpan {
                 name: attrs.metadata().name().to_string(),
