@@ -16,9 +16,6 @@ pub struct TracingConfig {
 }
 
 impl TracingConfig {
-    /// Loads tracing configuration from environment variables (typically via `.env` in local dev).
-    ///
-    /// Supported keys:
     /// - `OTEL_SERVICE_NAME` (falls back to `rustpulse-backend`)
     /// - `OTEL_EXPORTER_OTLP_ENDPOINT` (required to enable exporting)
     /// - `RUSTPULSE_ENV` (falls back to `local`)
@@ -39,9 +36,7 @@ impl TracingConfig {
 /// High-level status after initialization.
 #[derive(Debug)]
 pub enum TracingStatus {
-    /// Tracing is active and a startup span has been emitted.
     Active,
-    /// Tracing is disabled or degraded; service should continue without spans.
     Disabled { reason: DisabledReason },
 }
 
@@ -75,7 +70,6 @@ pub struct TracingInit {
 }
 
 /// Builds (but does not install) the OpenTelemetry layer.
-///
 /// - Returns a status describing whether tracing is effectively active or disabled.
 /// - Never panics.
 /// - Does not attempt any network I/O when disabled by configuration.

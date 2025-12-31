@@ -1,3 +1,4 @@
+use crate::infra::tracing as infra_tracing;
 use tracing::instrument;
 use tracing_appender::rolling;
 use tracing_subscriber::layer::SubscriberExt;
@@ -12,19 +13,19 @@ pub fn init(log_json: bool) {
         )
     });
 
-    let tracing_config = crate::infra::tracing::TracingConfig::from_env();
-    let tracing_init = crate::infra::tracing::init_tracing(&tracing_config).unwrap_or_else(|e| {
+    let tracing_config = infra_tracing::TracingConfig::from_env();
+    let tracing_init = infra_tracing::init_tracing(&tracing_config).unwrap_or_else(|e| {
         eprintln!("Warning: tracing disabled due to initialization error: {e}");
-        crate::infra::tracing::TracingInit {
-            status: crate::infra::tracing::TracingStatus::Disabled {
-                reason: crate::infra::tracing::DisabledReason::BackendUnavailable,
+        infra_tracing::TracingInit {
+            status: infra_tracing::TracingStatus::Disabled {
+                reason: infra_tracing::DisabledReason::BackendUnavailable,
             },
             otel_layer: None,
             exporter_meta: None,
         }
     });
 
-    let crate::infra::tracing::TracingInit {
+    let infra_tracing::TracingInit {
         status,
         otel_layer,
         exporter_meta,
@@ -104,10 +105,10 @@ pub fn init(log_json: bool) {
 
     //emits exactly one “exporter initialized” log + a minimal startup span when OTEL_EXPORTER_OTLP_ENDPOINT is set.
     if subscriber_installed
-        && let (crate::infra::tracing::TracingStatus::Active, Some(meta)) = (status, exporter_meta)
+        && let (infra_tracing::TracingStatus::Active, Some(meta)) = (status, exporter_meta)
     {
-        crate::infra::tracing::emit_exporter_initialized_log(&meta);
-        crate::infra::tracing::emit_startup_span();
+        infra_tracing::emit_exporter_initialized_log(&meta);
+        infra_tracing::emit_startup_span();
     }
 }
 

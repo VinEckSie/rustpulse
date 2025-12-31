@@ -2,16 +2,19 @@ use crate::core::application::telemetry::TelemetryQueryCase;
 use axum::extract::Query;
 use axum::http::StatusCode;
 use axum::routing::get;
-use axum::{Router, extract::State, response::IntoResponse};
+use axum::{Router, extract::State, middleware, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
 use tracing::instrument;
+
+use super::request_tracing;
 
 #[instrument(level = "info", skip(service))]
 pub fn routes(service: Arc<dyn TelemetryQueryCase>) -> Router {
     Router::new()
         .route("/metrics", get(fetch_telemetry_handler))
         .with_state(service)
+        .route_layer(middleware::from_fn(request_tracing::trace_middleware))
 }
 
 #[instrument(name = "fetch telemetry", skip(service), fields(

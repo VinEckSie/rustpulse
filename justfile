@@ -1,18 +1,14 @@
 # justfile
 
-# Format code
-fmt:
-    cargo fmt
-
-# Lint code
-lint:
-    cargo clippy -- -D warnings
-
 # Auto-fix clippy lints (when possible)
 fix:
     cargo fmt
     cargo clippy --fix --allow-dirty --allow-staged
     cargo fmt
+    cargo clippy -- -D warnings
+
+    # Lint code
+lint:
     cargo clippy -- -D warnings
 
 # Run tests
@@ -35,6 +31,9 @@ machete:
 doc:
     cargo doc --no-deps --open
 
+
+
+
 # Run all checks
 check:
     just fix
@@ -45,19 +44,17 @@ check:
     just machete
     just doc
 
-# Automatically rerun all checks on file change
-watch-dev:
-	cargo watch -s "cargo test" --ignore coverage --ignore target --ignore docs
+
 
 # Local dev (Jaeger + backend)
+dev:
+    @echo "Otel + Jaeger: \n- Start Docker Desktop \n- Run 'just jaeger' in one terminal \n- Run 'just backend' in another \n- Request an endpoint from Rustpulse \n- Check Jaeger UI at localhost:16686/search"
+
 jaeger:
     docker run --rm --name rustpulse-jaeger -p 16686:16686 -p 4317:4317 -e COLLECTOR_OTLP_ENABLED=true jaegertracing/all-in-one:latest
-
-jaeger-stop:
-    docker stop rustpulse-jaeger || true
 
 backend:
     cargo run -p backend --bin rustpulse
 
-dev:
-    @echo "Run 'just jaeger' in one terminal, then 'just backend' in another."
+jaeger-stop:
+    docker stop rustpulse-jaeger || true

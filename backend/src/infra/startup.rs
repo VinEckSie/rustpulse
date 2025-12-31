@@ -5,8 +5,7 @@ use crate::infra::mock_telemetry::MockDataGenerator;
 use axum::Router;
 use std::path::PathBuf;
 use std::sync::Arc;
-use tower_http::trace::{DefaultMakeSpan, DefaultOnRequest, DefaultOnResponse, TraceLayer};
-use tracing::{Level, instrument};
+use tracing::instrument;
 
 #[instrument(level = "info")]
 pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
@@ -27,13 +26,7 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
         .merge(http::root_handler::routes())
         .merge(http::health_handler::routes())
         .merge(http::telemetry_handler::routes(service)) // now injecting state
-        .merge(http::favicon_handler::routes())
-        .layer(
-            TraceLayer::new_for_http()
-                .make_span_with(DefaultMakeSpan::new().level(Level::INFO))
-                .on_response(DefaultOnResponse::new().level(Level::INFO))
-                .on_request(DefaultOnRequest::new().level(Level::INFO)),
-        );
+        .merge(http::favicon_handler::routes());
 
     let addr = format!("127.0.0.1:{port}");
     let listener = tokio::net::TcpListener::bind(addr).await.unwrap();
