@@ -1,4 +1,3 @@
-// core/application/telemetry/ports/output/telemetry_repository.rs
 use crate::core::domains::telemetry::Telemetry;
 
 #[async_trait::async_trait]
