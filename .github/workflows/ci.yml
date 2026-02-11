@@ -111,7 +111,7 @@ jobs:
         with:
           components: clippy
       - name: Linting
-        run: cargo clippy -- -D warnings
+        run: cargo clippy --all-targets --all-features -- -D warnings
   security:
     name: Security audit
     runs-on: ubuntu-latest
