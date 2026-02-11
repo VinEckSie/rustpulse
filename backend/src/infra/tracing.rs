@@ -216,7 +216,7 @@ mod tests {
                 let mut locked = self
                     .0
                     .lock()
-                    .map_err(|_| std::io::Error::new(std::io::ErrorKind::Other, "lock error"))?;
+                    .map_err(|_| std::io::Error::other("lock error"))?;
                 locked.extend_from_slice(buf);
                 Ok(buf.len())
             }

@@ -25,7 +25,7 @@ fn truncate_for_span(value: String, max_len: usize) -> String {
 
     let mut out = value;
     out.truncate(max_len);
-    out.push_str("…");
+    out.push('…');
     out
 }
 

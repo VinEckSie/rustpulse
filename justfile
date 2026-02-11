@@ -11,9 +11,9 @@ check:
 # Auto-fix clippy lints (when possible)
 fix:
     cargo fmt
-    cargo clippy --fix --allow-dirty --allow-staged
+    cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged
     cargo fmt
-    cargo clippy -- -D warnings
+    cargo clippy --all-targets --all-features -- -D warnings
 # Run tests
 test:
     cargo test
