@@ -6,6 +6,29 @@ use std::sync::Arc;
 use tracing::Instrument as _;
 use tracing::field;
 
+fn classify_anyhow_error(err: &anyhow::Error) -> (&'static str, &'static str) {
+    if err.is::<uuid::Error>() {
+        ("invalid_uuid", "uuid::Error")
+    } else if err.is::<std::io::Error>() {
+        ("io", "std::io::Error")
+    } else if err.is::<serde_json::Error>() {
+        ("serde_json", "serde_json::Error")
+    } else {
+        ("unknown", "unknown")
+    }
+}
+
+fn truncate_for_span(value: String, max_len: usize) -> String {
+    if value.len() <= max_len {
+        return value;
+    }
+
+    let mut out = value;
+    out.truncate(max_len);
+    out.push_str("…");
+    out
+}
+
 //use-case engine
 //output port dependencies holding: what rustpulse needs from the outside
 //to complete this use case, I need someone that can save/query telemetry.
@@ -47,7 +70,9 @@ impl TelemetryQueryCase for TelemetryService {
             "usecase.telemetry.fetch_all",
             outcome = field::Empty,
             "error.type" = field::Empty,
+            "error.code" = field::Empty,
             "otel.status_code" = field::Empty,
+            "exception.message" = field::Empty,
         );
 
         let result = self.repo.query_all(node_id).instrument(span.clone()).await;
@@ -57,9 +82,13 @@ impl TelemetryQueryCase for TelemetryService {
                 span.record("outcome", "ok");
             }
             Err(err) => {
+                let (error_code, error_type) = classify_anyhow_error(err);
+                let message = truncate_for_span(err.to_string(), 200);
                 span.record("outcome", "error");
                 span.record("otel.status_code", "ERROR");
-                span.record("error.type", std::any::type_name_of_val(err.root_cause()));
+                span.record("error.type", error_type);
+                span.record("error.code", error_code);
+                span.record("exception.message", message.as_str());
             }
         }
 
@@ -73,7 +102,9 @@ impl TelemetryIngestCase for TelemetryService {
             "usecase.telemetry.ingest",
             outcome = field::Empty,
             "error.type" = field::Empty,
+            "error.code" = field::Empty,
             "otel.status_code" = field::Empty,
+            "exception.message" = field::Empty,
         );
 
         let result = self.repo.save(telemetry).instrument(span.clone()).await;
@@ -83,9 +114,13 @@ impl TelemetryIngestCase for TelemetryService {
                 span.record("outcome", "ok");
             }
             Err(err) => {
+                let (error_code, error_type) = classify_anyhow_error(err);
+                let message = truncate_for_span(err.to_string(), 200);
                 span.record("outcome", "error");
                 span.record("otel.status_code", "ERROR");
-                span.record("error.type", std::any::type_name_of_val(err.root_cause()));
+                span.record("error.type", error_type);
+                span.record("error.code", error_code);
+                span.record("exception.message", message.as_str());
             }
         }
 

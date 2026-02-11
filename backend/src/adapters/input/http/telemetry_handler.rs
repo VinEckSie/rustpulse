@@ -39,7 +39,7 @@ pub async fn fetch_telemetry_handler(
                 "fetched metrics successfully."
             );
 
-            //only test purposes cause high payload for pretty Json
+            //only test purposes for now. Pretty Json causes high payload
             let json = serde_json::to_string_pretty(&metrics).unwrap();
             (StatusCode::OK, json).into_response()
         }

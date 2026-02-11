@@ -134,6 +134,8 @@ The goal is to showcase Rust architecture, testing, and systems design practices
 Documentation will be hosted on docs.rs￼ after the first crate release.
 Detailed case studies and weekly changelogs are available on the RustPulse Landing Page￼.
 
+- Local tracing runbook (OpenTelemetry + Jaeger): `docs/observability.md`
+
 
 ## 📄 License
 
