@@ -190,10 +190,10 @@ mod ingest_crc_tests {
     use tracing::Subscriber;
     use tracing::field::{Field, Visit};
     use tracing::span::{Attributes, Id, Record};
+    use tracing_subscriber::Layer;
     use tracing_subscriber::layer::Context;
     use tracing_subscriber::prelude::*;
     use tracing_subscriber::registry::LookupSpan;
-    use tracing_subscriber::Layer;
 
     struct FakeIngest {
         calls: Arc<AtomicUsize>,
@@ -279,7 +279,9 @@ mod ingest_crc_tests {
     {
         fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, _ctx: Context<'_, S>) {
             let mut fields = BTreeMap::new();
-            attrs.record(&mut FieldVisitor { fields: &mut fields });
+            attrs.record(&mut FieldVisitor {
+                fields: &mut fields,
+            });
 
             let span = CapturedSpan { fields };
 
@@ -317,8 +319,9 @@ mod ingest_crc_tests {
     #[tokio::test]
     async fn test_ingest_telemetry_without_crc_header_returns_202_and_calls_ingest_once() {
         let calls = Arc::new(AtomicUsize::new(0));
-        let service: Arc<dyn TelemetryIngestCase + Send + Sync> =
-            Arc::new(FakeIngest { calls: calls.clone() });
+        let service: Arc<dyn TelemetryIngestCase + Send + Sync> = Arc::new(FakeIngest {
+            calls: calls.clone(),
+        });
 
         let app = super::ingest_routes(service);
 
@@ -337,8 +340,9 @@ mod ingest_crc_tests {
     #[tokio::test]
     async fn test_ingest_telemetry_with_valid_crc_header_returns_202_and_calls_ingest_once() {
         let calls = Arc::new(AtomicUsize::new(0));
-        let service: Arc<dyn TelemetryIngestCase + Send + Sync> =
-            Arc::new(FakeIngest { calls: calls.clone() });
+        let service: Arc<dyn TelemetryIngestCase + Send + Sync> = Arc::new(FakeIngest {
+            calls: calls.clone(),
+        });
 
         let app = super::ingest_routes(service);
 
@@ -360,15 +364,16 @@ mod ingest_crc_tests {
     }
 
     #[tokio::test]
-    async fn test_ingest_telemetry_with_mismatched_crc_returns_400_does_not_call_ingest_and_records_crc_check_fail_span_field(
-    ) {
+    async fn test_ingest_telemetry_with_mismatched_crc_returns_400_does_not_call_ingest_and_records_crc_check_fail_span_field()
+     {
         let captured = Captured::default();
         let subscriber = tracing_subscriber::registry().with(CaptureLayer::new(captured.clone()));
         let _guard = tracing::subscriber::set_default(subscriber);
 
         let calls = Arc::new(AtomicUsize::new(0));
-        let service: Arc<dyn TelemetryIngestCase + Send + Sync> =
-            Arc::new(FakeIngest { calls: calls.clone() });
+        let service: Arc<dyn TelemetryIngestCase + Send + Sync> = Arc::new(FakeIngest {
+            calls: calls.clone(),
+        });
 
         let app = super::ingest_routes(service);
 
