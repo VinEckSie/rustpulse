@@ -1,6 +1,8 @@
 use crate::adapters::input::http;
 use crate::adapters::output::jsonl_repo::JsonlTelemetryRepo;
-use crate::core::application::telemetry::TelemetryService;
+use crate::core::application::telemetry::{
+    TelemetryIngestCase, TelemetryQueryCase, TelemetryService,
+};
 use crate::infra::mock_telemetry::MockDataGenerator;
 use axum::Router;
 use std::path::PathBuf;
@@ -20,12 +22,15 @@ pub async fn start_server(port: u16) -> Result<(), Box<dyn std::error::Error>> {
     // Set up the JSONL repository and service
     let repo = Arc::new(JsonlTelemetryRepo::new(temp_file_path));
     let service = Arc::new(TelemetryService::new(repo.clone()));
+    let query_service: Arc<dyn TelemetryQueryCase> = service.clone();
+    let ingest_service: Arc<dyn TelemetryIngestCase + Send + Sync> = service.clone();
 
     //Build Router
     let app = Router::new()
         .merge(http::root_handler::routes())
         .merge(http::health_handler::routes())
-        .merge(http::telemetry_handler::routes(service)) // now injecting state
+        .merge(http::telemetry_handler::routes(query_service)) // now injecting state
+        .merge(http::telemetry_handler::ingest_routes(ingest_service))
         .merge(http::favicon_handler::routes());
 
     let addr = format!("127.0.0.1:{port}");

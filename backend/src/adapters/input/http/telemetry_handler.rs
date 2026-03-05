@@ -7,7 +7,7 @@ use axum::routing::{get, post};
 use axum::{Router, middleware, response::IntoResponse};
 use std::collections::HashMap;
 use std::sync::Arc;
-use tracing::{field, instrument};
+use tracing::instrument;
 
 use super::request_tracing;
 
@@ -72,11 +72,7 @@ impl IntoResponse for TelemetryIngestHttpError {
     }
 }
 
-#[instrument(
-    name = "ingest telemetry",
-    skip(service, req),
-    fields(crc_check = field::Empty)
-)]
+#[instrument(name = "ingest telemetry", level = "info", skip(service, req))]
 pub async fn ingest_telemetry_handler(
     State(service): State<Arc<dyn TelemetryIngestCase + Send + Sync>>,
     req: Request,
@@ -90,7 +86,7 @@ pub async fn ingest_telemetry_handler(
     if let Some(expected) = provided_crc {
         let actual = crc32_ieee(&body);
         if actual != expected {
-            tracing::Span::current().record("crc_check", "fail");
+            tracing::info!(crc_check = "fail", "telemetry CRC check failed");
             return Err(TelemetryIngestHttpError::CrcMismatch);
         }
     }
@@ -182,14 +178,13 @@ mod ingest_crc_tests {
     use axum::body::Body;
     use axum::http::{Request, StatusCode};
     use serde_json::Value;
-    use std::collections::{BTreeMap, HashMap};
+    use std::collections::BTreeMap;
     use std::fmt;
     use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use tower::ServiceExt;
     use tracing::Subscriber;
     use tracing::field::{Field, Visit};
-    use tracing::span::{Attributes, Id, Record};
     use tracing_subscriber::Layer;
     use tracing_subscriber::layer::Context;
     use tracing_subscriber::prelude::*;
@@ -224,29 +219,18 @@ mod ingest_crc_tests {
     }
 
     #[derive(Clone, Default)]
-    struct Captured(Arc<Mutex<HashMap<u64, CapturedSpan>>>);
-
-    #[derive(Debug, Clone, Default)]
-    struct CapturedSpan {
-        fields: BTreeMap<String, String>,
-    }
+    struct CapturedEvents(Arc<Mutex<Vec<BTreeMap<String, String>>>>);
 
     #[derive(Clone, Default)]
-    struct CaptureLayer {
-        captured: Captured,
+    struct CaptureEventLayer {
+        captured: CapturedEvents,
     }
 
-    impl CaptureLayer {
-        fn new(captured: Captured) -> Self {
-            Self { captured }
-        }
-    }
-
-    struct FieldVisitor<'a> {
+    struct EventFieldVisitor<'a> {
         fields: &'a mut BTreeMap<String, String>,
     }
 
-    impl<'a> Visit for FieldVisitor<'a> {
+    impl<'a> Visit for EventFieldVisitor<'a> {
         fn record_str(&mut self, field: &Field, value: &str) {
             self.fields
                 .insert(field.name().to_string(), value.to_string());
@@ -273,50 +257,29 @@ mod ingest_crc_tests {
         }
     }
 
-    impl<S> Layer<S> for CaptureLayer
+    impl<S> Layer<S> for CaptureEventLayer
     where
         S: Subscriber + for<'a> LookupSpan<'a>,
     {
-        fn on_new_span(&self, attrs: &Attributes<'_>, id: &Id, _ctx: Context<'_, S>) {
+        fn on_event(&self, event: &tracing::Event<'_>, _ctx: Context<'_, S>) {
             let mut fields = BTreeMap::new();
-            attrs.record(&mut FieldVisitor {
+            event.record(&mut EventFieldVisitor {
                 fields: &mut fields,
             });
 
-            let span = CapturedSpan { fields };
-
-            let mut locked = self.captured.0.lock().expect("capture lock poisoned");
-            locked.insert(id.into_u64(), span);
-        }
-
-        fn on_record(&self, id: &Id, values: &Record<'_>, _ctx: Context<'_, S>) {
-            let mut locked = self.captured.0.lock().expect("capture lock poisoned");
-            if let Some(span) = locked.get_mut(&id.into_u64()) {
-                values.record(&mut FieldVisitor {
-                    fields: &mut span.fields,
-                });
-            }
+            let mut locked = self.captured.0.lock().expect("events lock poisoned");
+            locked.push(fields);
         }
     }
 
-    fn find_span_with_field(
-        captured: &Captured,
-        field_name: &str,
-        field_value: &str,
-    ) -> Option<CapturedSpan> {
-        let locked = captured.0.lock().ok()?;
+    fn any_event_has_field(captured: &CapturedEvents, key: &str, value: &str) -> bool {
+        let locked = captured.0.lock().expect("events lock poisoned");
         locked
-            .values()
-            .find(|s| {
-                s.fields
-                    .get(field_name)
-                    .map(String::as_str)
-                    .is_some_and(|v| v == field_value)
-            })
-            .cloned()
+            .iter()
+            .any(|m| m.get(key).map(String::as_str) == Some(value))
     }
 
-    #[tokio::test]
+    #[tokio::test(flavor = "current_thread")]
     async fn test_ingest_telemetry_without_crc_header_returns_202_and_calls_ingest_once() {
         let calls = Arc::new(AtomicUsize::new(0));
         let service: Arc<dyn TelemetryIngestCase + Send + Sync> = Arc::new(FakeIngest {
@@ -337,7 +300,7 @@ mod ingest_crc_tests {
         assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 
-    #[tokio::test]
+    #[tokio::test(flavor = "current_thread")]
     async fn test_ingest_telemetry_with_valid_crc_header_returns_202_and_calls_ingest_once() {
         let calls = Arc::new(AtomicUsize::new(0));
         let service: Arc<dyn TelemetryIngestCase + Send + Sync> = Arc::new(FakeIngest {
@@ -363,11 +326,13 @@ mod ingest_crc_tests {
         assert_eq!(calls.load(Ordering::SeqCst), 1);
     }
 
-    #[tokio::test]
+    #[tokio::test(flavor = "current_thread")]
     async fn test_ingest_telemetry_with_mismatched_crc_returns_400_does_not_call_ingest_and_records_crc_check_fail_span_field()
      {
-        let captured = Captured::default();
-        let subscriber = tracing_subscriber::registry().with(CaptureLayer::new(captured.clone()));
+        let captured = CapturedEvents::default();
+        let subscriber = tracing_subscriber::registry().with(CaptureEventLayer {
+            captured: captured.clone(),
+        });
         let _guard = tracing::subscriber::set_default(subscriber);
 
         let calls = Arc::new(AtomicUsize::new(0));
@@ -395,11 +360,6 @@ mod ingest_crc_tests {
         let v: Value = serde_json::from_slice(&bytes).unwrap();
         assert_eq!(v.get("code").and_then(|x| x.as_str()), Some("crc_mismatch"));
 
-        let span = find_span_with_field(&captured, "crc_check", "fail")
-            .expect("expected a span with crc_check=fail");
-        assert_eq!(
-            span.fields.get("crc_check").map(String::as_str),
-            Some("fail")
-        );
+        assert!(any_event_has_field(&captured, "crc_check", "fail"));
     }
 }

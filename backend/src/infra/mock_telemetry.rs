@@ -1,7 +1,7 @@
 use crate::core::domains::telemetry::Telemetry;
 use crate::errors::DataError;
 use chrono::Utc;
-use rand::Rng;
+use rand::RngExt;
 use std::fs::OpenOptions;
 use std::io::Write;
 use std::path::PathBuf;
@@ -30,7 +30,7 @@ impl MockDataGenerator {
                 cpu: Some(rng.random_range(0.0..100.0)),
                 memory: Some(rng.random_range(0.0..16000.0)),
                 timestamp: Utc::now(),
-                temperature: Some(rng.random_range(-10.0..50.0)),
+                temperature: Some(rng.random_range(-10.0f32..50.0f32)),
                 extras: Default::default(),
             };
 

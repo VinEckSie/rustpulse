@@ -17,8 +17,8 @@ pub struct TracingConfig {
 
 impl TracingConfig {
     /// - `OTEL_SERVICE_NAME` (falls back to `rustpulse-backend`)
-    /// - `OTEL_EXPORTER_OTLP_ENDPOINT` (required to enable exporting)
     /// - `RUSTPULSE_ENV` (falls back to `local`)
+    /// - `OTEL_EXPORTER_OTLP_ENDPOINT` (required to enable exporting)
     pub fn from_env() -> Self {
         let service_name =
             std::env::var("OTEL_SERVICE_NAME").unwrap_or_else(|_| "rustpulse-backend".to_string());

@@ -3,6 +3,7 @@ use crate::core::application::telemetry::ports::input::telemetry_query_usecase::
 use crate::core::application::telemetry::ports::output::telemetry_repository::TelemetryRepository;
 use crate::core::domains::telemetry::Telemetry;
 use std::sync::Arc;
+use tokio::time::{Duration, sleep};
 use tracing::Instrument as _;
 use tracing::field;
 
@@ -27,6 +28,20 @@ fn truncate_for_span(value: String, max_len: usize) -> String {
     out.truncate(max_len);
     out.push('…');
     out
+}
+
+const INGEST_MAX_ATTEMPTS: usize = 3;
+const INGEST_BASE_BACKOFF_MS: u64 = 1;
+const INGEST_MAX_BACKOFF_MS: u64 = 8;
+
+#[derive(Debug, thiserror::Error)]
+pub enum TelemetryIngestError {
+    #[error("retry exhausted after {attempts} attempts: {last_error}")]
+    RetryExhausted { attempts: usize, last_error: String },
+}
+
+fn is_transient_ingest_error(err: &anyhow::Error) -> bool {
+    err.is::<std::io::Error>()
 }
 
 //use-case engine
@@ -107,7 +122,51 @@ impl TelemetryIngestCase for TelemetryService {
             "exception.message" = field::Empty,
         );
 
-        let result = self.repo.save(telemetry).instrument(span.clone()).await;
+        let result = {
+            let original = telemetry;
+            let mut attempt: usize = 1;
+
+            loop {
+                let result = self
+                    .repo
+                    .save(original.clone())
+                    .instrument(span.clone())
+                    .await;
+
+                match result {
+                    Ok(()) => break Ok(()),
+                    Err(err) => {
+                        let is_transient = is_transient_ingest_error(&err);
+
+                        if !is_transient {
+                            break Err(err);
+                        }
+
+                        if attempt >= INGEST_MAX_ATTEMPTS {
+                            break Err(anyhow::Error::new(TelemetryIngestError::RetryExhausted {
+                                attempts: INGEST_MAX_ATTEMPTS,
+                                last_error: err.to_string(),
+                            }));
+                        }
+
+                        let exp = (attempt - 1) as u32;
+                        let backoff_ms = (INGEST_BASE_BACKOFF_MS
+                            .saturating_mul(2u64.saturating_pow(exp)))
+                        .min(INGEST_MAX_BACKOFF_MS);
+
+                        attempt += 1;
+                        tracing::info!(
+                            attempt,
+                            backoff_ms,
+                            reason = "transient_error",
+                            "retrying telemetry ingest"
+                        );
+
+                        sleep(Duration::from_millis(backoff_ms)).await;
+                    }
+                }
+            }
+        };
 
         match &result {
             Ok(_) => {
@@ -133,8 +192,10 @@ mod tests {
     use super::*;
     use anyhow::anyhow;
     use chrono::Utc;
+    use std::collections::VecDeque;
     use std::collections::{BTreeMap, HashMap};
     use std::fmt;
+    use std::sync::atomic::{AtomicUsize, Ordering};
     use std::sync::{Arc, Mutex};
     use tracing::Subscriber;
     use tracing::field::{Field, Visit};
@@ -365,5 +426,212 @@ mod tests {
             usecase_span.fields.get("outcome").map(String::as_str),
             Some("ok")
         );
+    }
+
+    #[derive(Debug, thiserror::Error)]
+    #[error("permanent error")]
+    struct PermanentErr;
+
+    #[derive(Default)]
+    struct ScriptedSaveRepo {
+        calls: AtomicUsize,
+        script: Mutex<VecDeque<anyhow::Result<()>>>,
+    }
+
+    impl ScriptedSaveRepo {
+        fn new(script: Vec<anyhow::Result<()>>) -> Self {
+            Self {
+                calls: AtomicUsize::new(0),
+                script: Mutex::new(script.into()),
+            }
+        }
+
+        fn calls(&self) -> usize {
+            self.calls.load(Ordering::SeqCst)
+        }
+    }
+
+    #[async_trait::async_trait]
+    impl TelemetryRepository for ScriptedSaveRepo {
+        async fn save(&self, _telemetry: Telemetry) -> anyhow::Result<()> {
+            self.calls.fetch_add(1, Ordering::SeqCst);
+
+            let mut locked = self.script.lock().expect("script lock poisoned");
+            locked
+                .pop_front()
+                .unwrap_or_else(|| Err(anyhow!("script exhausted")))
+        }
+
+        async fn query_all(&self, _node_id: Option<String>) -> anyhow::Result<Vec<Telemetry>> {
+            Ok(vec![])
+        }
+    }
+
+    #[derive(Clone, Default)]
+    struct CapturedEvents(Arc<Mutex<Vec<BTreeMap<String, String>>>>);
+
+    #[derive(Clone, Default)]
+    struct CaptureEventLayer {
+        captured: CapturedEvents,
+    }
+
+    struct EventFieldVisitor<'a> {
+        fields: &'a mut BTreeMap<String, String>,
+    }
+
+    impl<'a> Visit for EventFieldVisitor<'a> {
+        fn record_str(&mut self, field: &Field, value: &str) {
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
+        }
+
+        fn record_u64(&mut self, field: &Field, value: u64) {
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
+        }
+
+        fn record_i64(&mut self, field: &Field, value: i64) {
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
+        }
+
+        fn record_bool(&mut self, field: &Field, value: bool) {
+            self.fields
+                .insert(field.name().to_string(), value.to_string());
+        }
+
+        fn record_debug(&mut self, field: &Field, value: &dyn fmt::Debug) {
+            self.fields
+                .insert(field.name().to_string(), format!("{value:?}"));
+        }
+    }
+
+    impl<S> tracing_subscriber::Layer<S> for CaptureEventLayer
+    where
+        S: Subscriber + for<'a> LookupSpan<'a>,
+    {
+        fn on_event(
+            &self,
+            event: &tracing::Event<'_>,
+            _ctx: tracing_subscriber::layer::Context<'_, S>,
+        ) {
+            let mut fields = BTreeMap::new();
+            event.record(&mut EventFieldVisitor {
+                fields: &mut fields,
+            });
+
+            let mut locked = self.captured.0.lock().expect("events lock poisoned");
+            locked.push(fields);
+        }
+    }
+
+    fn has_retry_event(captured: &CapturedEvents, attempt: &str) -> bool {
+        let locked = captured.0.lock().expect("events lock poisoned");
+        locked.iter().any(|m| {
+            m.get("reason").map(String::as_str) == Some("transient_error")
+                && m.get("attempt").map(String::as_str) == Some(attempt)
+        })
+    }
+
+    fn sample_telemetry_for_retry_tests() -> Telemetry {
+        Telemetry {
+            source_id: Uuid::nil(),
+            server_id: Uuid::nil(),
+            timestamp: Utc::now(),
+            cpu: None,
+            memory: None,
+            temperature: None,
+            extras: serde_json::json!({}),
+        }
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn test_ingest_retries_transient_then_succeeds_within_budget() {
+        let captured = CapturedEvents::default();
+        let subscriber = tracing_subscriber::registry().with(CaptureEventLayer {
+            captured: captured.clone(),
+        });
+        let _guard = tracing::subscriber::set_default(subscriber);
+
+        let repo = Arc::new(ScriptedSaveRepo::new(vec![
+            Err(anyhow::Error::new(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "transient 1",
+            ))),
+            Err(anyhow::Error::new(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "transient 2",
+            ))),
+            Ok(()),
+        ]));
+        let service = TelemetryService::new(repo.clone());
+
+        let result = service.ingest(sample_telemetry_for_retry_tests()).await;
+        assert!(result.is_ok());
+        assert_eq!(repo.calls(), 3);
+
+        assert!(has_retry_event(&captured, "2"));
+        assert!(has_retry_event(&captured, "3"));
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn test_ingest_returns_retry_exhausted_after_max_attempts_on_transient() {
+        let captured = CapturedEvents::default();
+        let subscriber = tracing_subscriber::registry().with(CaptureEventLayer {
+            captured: captured.clone(),
+        });
+        let _guard = tracing::subscriber::set_default(subscriber);
+
+        let repo = Arc::new(ScriptedSaveRepo::new(vec![
+            Err(anyhow::Error::new(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "transient 1",
+            ))),
+            Err(anyhow::Error::new(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "transient 2",
+            ))),
+            Err(anyhow::Error::new(std::io::Error::new(
+                std::io::ErrorKind::TimedOut,
+                "transient 3",
+            ))),
+        ]));
+        let service = TelemetryService::new(repo.clone());
+
+        let err = service
+            .ingest(sample_telemetry_for_retry_tests())
+            .await
+            .expect_err("expected retry exhausted error");
+
+        assert!(
+            err.to_string().contains("retry exhausted"),
+            "unexpected error: {err:?}"
+        );
+
+        assert_eq!(repo.calls(), INGEST_MAX_ATTEMPTS);
+        assert!(has_retry_event(&captured, "2"));
+        assert!(has_retry_event(&captured, "3"));
+    }
+
+    #[tokio::test(flavor = "current_thread")]
+    async fn test_ingest_fails_fast_on_permanent_error_no_retry() {
+        let captured = CapturedEvents::default();
+        let subscriber = tracing_subscriber::registry().with(CaptureEventLayer {
+            captured: captured.clone(),
+        });
+        let _guard = tracing::subscriber::set_default(subscriber);
+
+        let repo = Arc::new(ScriptedSaveRepo::new(vec![Err(anyhow::Error::new(
+            PermanentErr,
+        ))]));
+        let service = TelemetryService::new(repo.clone());
+
+        let _ = service
+            .ingest(sample_telemetry_for_retry_tests())
+            .await
+            .expect_err("expected permanent error");
+
+        assert_eq!(repo.calls(), 1);
+        assert!(!has_retry_event(&captured, "2"));
     }
 }
