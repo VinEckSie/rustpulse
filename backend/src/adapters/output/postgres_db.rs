@@ -1,8 +1,8 @@
 use std::str::FromStr;
 use std::time::{Duration, Instant};
 
-use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 use sqlx::PgPool;
+use sqlx::postgres::{PgConnectOptions, PgPoolOptions};
 
 #[derive(thiserror::Error, Debug)]
 pub enum DbError {
@@ -45,11 +45,10 @@ pub async fn connect_pool(database_url: &str) -> Result<PgPool, DbError> {
     let endpoint = sanitize_database_url(database_url);
 
     let start = Instant::now();
-    let opts = PgConnectOptions::from_str(database_url).map_err(|e| {
-        DbError::InvalidConnectionString {
+    let opts =
+        PgConnectOptions::from_str(database_url).map_err(|e| DbError::InvalidConnectionString {
             message: e.to_string(),
-        }
-    })?;
+        })?;
 
     let connect_fut = PgPoolOptions::new()
         .acquire_timeout(Duration::from_millis(600))
@@ -135,6 +134,9 @@ mod tests {
     async fn test_db_connect_reports_connect_failure_for_unreachable_host() {
         let url = "postgres://user:pass@127.0.0.1:1/db";
         let err = connect_pool(url).await.unwrap_err();
-        assert!(matches!(err, DbError::Connect { .. } | DbError::ConnectTimeout { .. }));
+        assert!(matches!(
+            err,
+            DbError::Connect { .. } | DbError::ConnectTimeout { .. }
+        ));
     }
 }
