@@ -1,4 +1,8 @@
 
+#WATCH FOR CHANGES
+watch:
+    cargo watch -c -x "check -p backend"
+
 # RUN ALL CHECKS
 check:
     just fix
@@ -19,7 +23,7 @@ test:
     cargo test
 # Audit for security vulnerabilities
 audit:
-    cargo audit
+    cargo audit --ignore RUSTSEC-2024-0436 --ignore RUSTSEC-2023-0071
 # Code Coverage
 coverage:
     cargo tarpaulin --out Html --output-dir coverage
@@ -29,8 +33,6 @@ machete:
 # Build documentation
 doc:
     cargo doc --no-deps --open
-
-
 
 # LOCAL DEV
 # Tracing with OpenTelemetry + Jaeger

@@ -1,0 +1,20 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: rustpulse-postgres
+    environment:
+      POSTGRES_USER: rustpulse
+      POSTGRES_PASSWORD: rustpulse_dev_pw
+      POSTGRES_DB: rustpulse
+    ports:
+      - "5432:5432"
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U rustpulse -d rustpulse"]
+      interval: 2s
+      timeout: 2s
+      retries: 20
+    volumes:
+      - rustpulse_pg:/var/lib/postgresql/data
+
+volumes:
+  rustpulse_pg:
