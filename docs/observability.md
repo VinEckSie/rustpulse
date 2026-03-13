@@ -54,6 +54,61 @@ Expected span shape:
 - `usecase.telemetry.fetch_all`
     - check value for tags `error.code`, `error.type`, `exception.message`
 
+# Local ingest CRC check (POST /telemetry)
+
+The ingest endpoint supports an optional `x-crc32` header (CRC-32/IEEE) to validate the request body bytes.
+
+**Prereqs**
+- Backend running (`just backend`)
+- (optional) Jaeger running + OTEL env configured (follow the section above)
+
+**0) (Optional) Inspect the example body**
+
+Repo root has `body.json` which is a valid telemetry ingest payload.
+
+**1) Ingest without CRC header**
+
+Terminal:
+- `just telemetry-ingest-no-crc`
+
+Expected:
+- `202 Accepted`
+
+**2) Ingest with a valid CRC header**
+
+Terminal:
+- `just telemetry-ingest-crc-ok`
+
+Expected:
+- `202 Accepted`
+
+**3) Ingest with a mismatched CRC header**
+
+Terminal:
+- `just telemetry-ingest-crc-bad`
+
+Expected:
+- `400 Bad Request`
+- JSON error `code: "crc_mismatch"`
+
+**4) Ingest with an invalid CRC header**
+
+Terminal:
+- `just telemetry-ingest-crc-invalid`
+
+Expected:
+- `400 Bad Request`
+- JSON error `code: "invalid_crc"`
+
+**5) Verify in Jaeger (optional)**
+
+Jaeger UI:
+- Service: `rustpulse-backend`
+- Operation: `POST /telemetry`
+
+For the mismatch case, the trace should include a log/event field:
+- `crc_check = "fail"`
+
 ## Disable tracing
 
 Remove/unset `OTEL_EXPORTER_OTLP_ENDPOINT` and restart the backend.

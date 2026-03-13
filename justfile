@@ -45,4 +45,21 @@ backend:
 jaeger-stop:
     docker stop rustpulse-jaeger || true
 
+# LOCAL DEV
+# CRC-32 (X-CRC32 header) testing for POST /telemetry
+crc32 file="body.json":
+    python3 -c 'import zlib; data=open("{{file}}","rb").read(); print("{:08x}".format(zlib.crc32(data) & 0xffffffff))'
+
+telemetry-ingest-no-crc file="body.json":
+    curl -sS -i -X POST http://127.0.0.1:3000/telemetry -H "content-type: application/json" --data-binary @"{{file}}"
+
+telemetry-ingest-crc-ok file="body.json":
+    curl -sS -i -X POST http://127.0.0.1:3000/telemetry -H 'content-type: application/json' -H "x-crc32: $(just crc32 {{file}})" --data-binary @"{{file}}"
+
+telemetry-ingest-crc-bad file="body.json":
+    curl -sS -i -X POST http://127.0.0.1:3000/telemetry -H "content-type: application/json" -H "x-crc32: 00000000" --data-binary @"{{file}}"
+
+telemetry-ingest-crc-invalid file="body.json":
+    curl -sS -i -X POST http://127.0.0.1:3000/telemetry -H "content-type: application/json" -H "x-crc32: not-hex" --data-binary @"{{file}}"
+
 # Add a part for github BP with branches and CI
