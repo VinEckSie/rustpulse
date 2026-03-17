@@ -6,8 +6,8 @@ watch:
 # RUN ALL CHECKS
 check:
     just fix
+    just deny
     just test
-    just audit
     just coverage
     just machete
     just doc
@@ -18,21 +18,26 @@ fix:
     cargo clippy --all-targets --all-features --fix --allow-dirty --allow-staged
     cargo fmt
     cargo clippy --all-targets --all-features -- -D warnings
+
+# compliance + supply-chain security checks
+deny:
+    cargo deny check
+
 # Run tests
 test:
     cargo test
-# Audit for security vulnerabilities
-audit:
-    cargo audit --ignore RUSTSEC-2024-0436 --ignore RUSTSEC-2023-0071
+
 # Code Coverage
 coverage:
     cargo tarpaulin --out Html --output-dir coverage
+
 # Check for unused dependencies
 machete:
     cargo machete || true
 # Build documentation
 doc:
     cargo doc --no-deps --open
+
 
 # LOCAL DEV
 # Tracing with OpenTelemetry + Jaeger
