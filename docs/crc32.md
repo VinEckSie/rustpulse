@@ -1,4 +1,4 @@
-# CRC-32 (X-CRC32 / `x-crc32`) testing (POST `/telemetry`)
+# CRC-32 (X-CRC32) testing (POST)
 
 The ingest endpoint supports an optional `x-crc32` header (CRC-32/IEEE) to validate the request body bytes.
 
