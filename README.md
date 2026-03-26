@@ -151,7 +151,10 @@ Prod fail-fast:
 Documentation will be hosted on docs.rs￼ after the first crate release.
 Detailed case studies and weekly changelogs are available on the RustPulse Landing Page￼.
 
-- Local tracing runbook (OpenTelemetry + Jaeger): `docs/observability.md`
+- `docs/observability.md` — [Observability (OpenTelemetry + Jaeger)](docs/observability.md)
+- `docs/crc32.md` — [CRC-32 ingest testing (POST /telemetry)](docs/crc32.md)
+- `docs/persistence.md` — [Persistence](docs/persistence.md)
+- `docs/deployment_runbook.md` — [Deployment runbook](docs/deployment_runbook.md)
 
 
 ## 📄 License
