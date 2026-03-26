@@ -4,7 +4,8 @@ services:
     container_name: rustpulse-postgres
     environment:
       POSTGRES_USER: rustpulse
-      POSTGRES_PASSWORD: rustpulse_dev_pw
+      # Set `POSTGRES_PASSWORD` in your local `.env` (gitignored).
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:?set POSTGRES_PASSWORD in .env}
       POSTGRES_DB: rustpulse
     ports:
       - "5432:5432"

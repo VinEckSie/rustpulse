@@ -1,0 +1,16 @@
+[Unit]
+Description=RustPulse production stack
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/rustpulse
+EnvironmentFile=/opt/rustpulse/env/rustpulse.prod.env
+ExecStart=/usr/bin/docker compose -f compose.prod.yaml up -d --pull always
+ExecStop=/usr/bin/docker compose -f compose.prod.yaml down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target

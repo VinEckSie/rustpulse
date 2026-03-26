@@ -1,0 +1,98 @@
+name: deploy-staging
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: read
+  packages: write
+
+concurrency:
+  group: deploy-staging
+  cancel-in-progress: false
+
+env:
+  IMAGE_NAME: ghcr.io/vinecksie/rustpulse
+  DEPLOY_DIR: /opt/rustpulse
+  ENV_FILE: /opt/rustpulse/env/rustpulse.staging.env
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set image tag
+        run: echo "IMAGE_TAG=staging-${GITHUB_SHA}" >> "$GITHUB_ENV"
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Log in to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ./Dockerfile
+          push: true
+          tags: |
+            ${{ env.IMAGE_NAME }}:${{ env.IMAGE_TAG }}
+            ${{ env.IMAGE_NAME }}:staging
+
+      - name: Prepare SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.STAGING_SSH_PORT }}" -H "${{ secrets.STAGING_SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Start ssh-agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
+
+      - name: Upload deployment files
+        run: |
+          scp -P "${{ secrets.STAGING_SSH_PORT }}" \
+            compose.staging.yaml \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}:/tmp/compose.staging.yaml"
+
+          scp -P "${{ secrets.STAGING_SSH_PORT }}" \
+            deploy/systemd/rustpulse-staging.service \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}:/tmp/rustpulse-staging.service"
+
+      - name: Deploy on staging VM
+        env:
+          RUSTPULSE_STAGING_ENV_B64: ${{ secrets.RUSTPULSE_STAGING_ENV_B64 }}
+        run: |
+          ssh -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" <<EOF
+            set -euo pipefail
+
+            sudo mkdir -p ${DEPLOY_DIR}/env
+
+            sudo install -m 644 /tmp/compose.staging.yaml ${DEPLOY_DIR}/compose.staging.yaml
+            sudo install -m 644 /tmp/rustpulse-staging.service /etc/systemd/system/rustpulse-staging.service
+
+            printf '%s' "${RUSTPULSE_STAGING_ENV_B64}" | base64 -d | sudo tee ${ENV_FILE} > /dev/null
+            echo "IMAGE_TAG=${IMAGE_TAG}" | sudo tee -a ${ENV_FILE} > /dev/null
+            sudo chmod 600 ${ENV_FILE}
+
+            sudo systemctl daemon-reload
+            sudo systemctl enable rustpulse-staging
+            sudo systemctl restart rustpulse-staging
+          EOF
+
+      - name: Smoke test
+        run: |
+          curl --fail --retry 12 --retry-delay 5 \
+            "http://${{ secrets.STAGING_APP_HOST }}:${{ secrets.STAGING_APP_PORT }}/healthz"
