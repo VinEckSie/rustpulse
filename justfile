@@ -1,7 +1,7 @@
 
 #WATCH FOR CHANGES
 watch:
-    cargo watch -c -x "check -p backend"
+    cargo watch -c -x "check"
 
 # RUN ALL CHECKS
 check:
@@ -45,7 +45,7 @@ jaeger:
     docker run --rm --name rustpulse-jaeger -p 16686:16686 -p 4317:4317 -e COLLECTOR_OTLP_ENABLED=true jaegertracing/all-in-one:latest
 
 backend:
-    cargo run -p backend --bin rustpulse
+    cargo run --bin rustpulse
 
 jaeger-stop:
     docker stop rustpulse-jaeger || true

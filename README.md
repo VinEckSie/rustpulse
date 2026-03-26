@@ -1,5 +1,6 @@
 # 🚀 RustPulse — Secure, Real-Time Telemetry Engine
 [![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
+[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/audit.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange)](https://www.rust-lang.org/)
 [![Last Commit](https://img.shields.io/github/last-commit/vinecksie/rustpulse)](https://github.com/vinecksie/rustpulse)
@@ -126,6 +127,23 @@ src/
 This repository is a personal development project.
 This project is an educational but production-grade architecture showcase for Rust backend systems.
 The goal is to showcase Rust architecture, testing, and systems design practices — not to provide a production-ready tool.
+
+## 🚢 Deployment (Staging + Production)
+
+RustPulse uses the same production-like deployment model in **staging** and **production**:
+
+- **Linux VM + Docker containers**
+- Orchestrated with **Docker Compose**
+- Managed by **systemd**
+- Environment-specific behavior is controlled **only** via injected environment variables and **server-side env files**
+
+Files:
+- Compose: `compose.staging.yaml`, `compose.prod.yaml`
+- systemd units: `deploy/systemd/rustpulse-staging.service`, `deploy/systemd/rustpulse.service`
+- Env file examples: `deploy/env/rustpulse.staging.env.example`, `deploy/env/rustpulse.prod.env.example`
+
+Prod fail-fast:
+- If `APP_ENV=prod`, the backend exits with an error if any of these are missing: `PORT`, `DATABASE_URL`, `JWT_SECRET`.
 
 
 ## 📚 Documentation

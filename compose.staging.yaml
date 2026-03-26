@@ -1,0 +1,30 @@
+services:
+  postgres:
+    image: postgres:16
+    container_name: rustpulse-postgres-staging
+    env_file:
+      - /opt/rustpulse/env/rustpulse.staging.env
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U $$POSTGRES_USER -d $$POSTGRES_DB"]
+      interval: 5s
+      timeout: 5s
+      retries: 12
+      start_period: 10s
+    volumes:
+      - rustpulse_staging_pg:/var/lib/postgresql/data
+    restart: unless-stopped
+
+  rustpulse:
+    image: ghcr.io/vinecksie/rustpulse:${IMAGE_TAG}
+    container_name: rustpulse-staging
+    env_file:
+      - /opt/rustpulse/env/rustpulse.staging.env
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    restart: unless-stopped
+
+volumes:
+  rustpulse_staging_pg:

@@ -1,0 +1,32 @@
+services:
+  rustpulse:
+    image: ghcr.io/vinecksie/rustpulse:prod
+    container_name: rustpulse
+    ports:
+      - "8080:8080"
+    environment:
+      APP_ENV: ${APP_ENV}
+      HOST: ${HOST}
+      PORT: ${PORT}
+      RUSTPULSE_STORAGE: ${RUSTPULSE_STORAGE}
+      DATABASE_URL: ${DATABASE_URL}
+      JWT_SECRET: ${JWT_SECRET}
+      LOG_JSON: ${LOG_JSON}
+      RUST_LOG: ${RUST_LOG}
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:16
+    container_name: rustpulse-postgres
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+    volumes:
+      - rustpulse_prod_pg:/var/lib/postgresql/data
+    restart: unless-stopped
+
+volumes:
+  rustpulse_prod_pg:

@@ -1,0 +1,16 @@
+[Unit]
+Description=RustPulse staging stack
+After=docker.service network-online.target
+Requires=docker.service
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+WorkingDirectory=/opt/rustpulse
+EnvironmentFile=/opt/rustpulse/env/rustpulse.staging.env
+ExecStart=/usr/bin/docker compose -f /opt/rustpulse/compose.staging.yaml up -d --pull always
+ExecStop=/usr/bin/docker compose -f /opt/rustpulse/compose.staging.yaml down
+TimeoutStartSec=0
+
+[Install]
+WantedBy=multi-user.target
