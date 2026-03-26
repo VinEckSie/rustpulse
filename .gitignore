@@ -18,6 +18,7 @@
 backend/.env
 frontend/.env
 *.env.local
+deploy/env/*.env
 
 # RustRover / IntelliJ
 #  JetBrains specific template is maintained in a separate JetBrains.gitignore that can
