@@ -38,6 +38,13 @@ machete:
 doc:
     cargo doc --no-deps --open
 
+# Scripts
+#docker-build:
+ #   ./scripts/docker_build.sh
+#deploy-staging:
+ #   ./scripts/deploy_staging.sh
+#smoke:
+ #   ./scripts/smoke_test.sh
 
 # LOCAL DEV
 # Tracing with OpenTelemetry + Jaeger
