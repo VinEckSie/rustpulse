@@ -4,10 +4,10 @@ FROM rust:1.86-bookworm AS builder
 WORKDIR /app
 
 COPY Cargo.toml Cargo.lock ./
-COPY backend/Cargo.toml backend/Cargo.toml
-COPY backend/src backend/src
+COPY Cargo.toml Cargo.toml
+COPY src src
 
-RUN cargo build -p backend --bin rustpulse --release
+RUN cargo build --bin rustpulse --release
 
 FROM debian:bookworm-slim AS runtime
 WORKDIR /app
