@@ -1,172 +1,104 @@
-# 🚀 RustPulse — Secure, Real-Time Telemetry Engine
+# ⚡ RustPulse — Real-Time Telemetry Engine in Rust
+
 [![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
 [![CI](https://github.com/vinecksie/rustpulse/actions/workflows/audit.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
 [![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange)](https://www.rust-lang.org/)
 [![Last Commit](https://img.shields.io/github/last-commit/vinecksie/rustpulse)](https://github.com/vinecksie/rustpulse)
 
-Real-Time Telemetry Engine in Rust — built for 🛰️ edge devices, self-hosted metrics, and secure, offline-first operations.  
-Powered by **Axum**, **gRPC (Tonic)**, and **PostgreSQL**.
+RustPulse is an **async telemetry engine** exploring how to build reliable data pipelines and well-structured systems in Rust.
+
+Designed as a **case study in systems design**, observability, and production-oriented engineering practices.
+
+📘 Case study → https://vinecksie.super.site/rustpulse
 
 
-## ✨ Overview
+# Overview
 
-**RustPulse** is a modular, secure telemetry engine written in Rust for **real-time monitoring of distributed nodes**.  
-It targets **offline-first**, **self-hosted** environments such as simulation clusters, defense systems, or autonomous edge deployments.
+RustPulse ingests and processes telemetry from distributed nodes using a modular architecture that isolates domain logic from infrastructure concerns.
 
-**Highlights**
-- Hexagonal Architecture (Ports & Adapters)
-- Domain-Driven + Test-Driven Development
-- REST / gRPC APIs with SQLx & PostgreSQL persistence
-- Offline-first design for edge & mission-critical ops
-- CLI → Dashboard observability (Prometheus / Grafana)
-- JWT-based auth with planned role separation
-- MockTelemetrySource for simulation and test isolation
+Focus areas:
+
+• async processing with Axum + Tonic (gRPC)  
+• PostgreSQL persistence with JSONL fallback  
+• structured tracing and observability  
+• clean hexagonal architecture  
+• production-style CI validation  
 
 
-## 🧱 Architecture Overview
+# Key Capabilities
 
-RustPulse follows a **Hexagonal Architecture** that isolates the domain layer from infrastructure and interfaces.
-
-**Core Domains**
-- `Node` → Agent identity and lifecycle  
-- `NodeTelemetry` → Real-time metrics ingestion  
-- `TelemetrySource` → Validation and data flow orchestration  
-
-**Design Principles**
-- **DDD** — domain-centric entities and use-cases  
-- **TDD** — integration tests across async boundaries  
-- **Security** — JWT authentication + role-based API/CLI separation  
-
-<p align="center">
-  <img src="https://raw.githubusercontent.com/VinEckSie/rustpulse/main/docs/architecture_overview.png" width="640">
-</p>
+• REST + gRPC ingestion endpoints  
+• PostgreSQL storage via SQLx with idempotent schema init  
+• JSONL fallback for offline-first scenarios  
+• structured logging with tracing  
+• OpenTelemetry tracing with Jaeger (local)  
+• CRC32 request validation for data integrity  
+• configurable environment-based runtime behaviour  
+• CI pipeline with clippy, tests, coverage, cargo-deny  
 
 
-## 🧰 Tech Stack
+# Architecture
 
-| Component | Tooling | Purpose |
-|------------|----------|----------|
-| **Backend Framework** | Axum | Fast async REST API building |
-| **Storage** | PostgreSQL + SQLx / JSONL | Scalable telemetry persistence |
-| **Transport** | Tonic (gRPC) | Binary protocol for distributed telemetry |
-| **CQRS** | Axum + async executors | Clean command/query separation |
-| **CLI Tool** | Clap | Native CLI with full telemetry control |
-| **Auth** | JWT (jsonwebtoken) | Secure session & access management |
-| **Observability** | Prometheus + Grafana | Metrics & visualization |
-| **Logging** | Tracing | High-performance structured logs |
-| **CI/CD** | GitHub Actions + Clippy + cargo-llvm-cov | Linting, testing, coverage |
+RustPulse follows a **hexagonal architecture** separating:
 
+domain logic • application services • infrastructure adapters
 
-## 🧩 Features
+Core domains:
 
-- RESTful endpoints via **Axum**
-- Modular config with `.env` + **dotenvy**
-- Centralized logging with **tracing** / **tracing-subscriber**
-- Integration & unit tests using **tokio** + **reqwest**
-- Outbound adapters for DB, mocks, and sources
-- Async-safe operations with `tokio::sync::Mutex`
-- Simplified error handling via **anyhow**
-- Trait-based plug-and-play collectors (no core refactor needed)
+• Node identity lifecycle  
+• telemetry ingestion pipeline  
+• validation and transformation flow  
 
-## 📁 Project Structure
+Design principles:
 
-```plaintext
-src/
-├── adapters/          # Outbound adapters (DBs, mocks, sources)
-│   ├── mock_repo.rs
-│   ├── postgres_metrics_repo.rs
-│   └── telemetry_source_repo.rs
-│
-├── app/               # Application orchestration
-│   ├── errors.rs
-│   └── metrics_service.rs
-│
-├── cli/               # Command-line interface
-│   ├── args.rs
-│   └── commands.rs
-│
-├── core/              # Domain logic (entities, ports, use-cases)
-│   ├── domains/
-│   │   ├── node.rs
-│   │   └── telemetry.rs
-│   ├── domains.rs
-│   └── port.rs
-│
-├── handlers/          # HTTP handlers (Axum routes)
-│   ├── health.rs
-│   ├── metrics.rs
-│   └── root.rs
-│
-├── infra/             # Infrastructure (DB, logging, startup)
-│   ├── db.rs
-│   ├── logging.rs
-│   └── startup.rs
-│
-├── tests/             # Integration tests
-│   ├── api.rs
-│   └── common.rs
-│
-├── lib.rs             # Library entry point
-└── main.rs            # Binary entry point
-```
+DDD-inspired boundaries  
+TDD-oriented workflow  
+composable ports and adapters  
 
-## 🧭 Planned Enhancements
-- Prometheus + Grafana integration for observability
-- SQLx-powered PostgreSQL persistence layer
-- Structured alerting & configurable thresholds
-- JWT-based auth with role-guarded API routes
-- Cryptographic handshake (X25519 + HKDF)
-- gRPC public API for distributed telemetry
-- Containerized DevOps pipeline (Docker + GitHub Actions)
-- UI dashboard & CLI client for control and live metrics
+# Tech Stack
+
+Rust · Axum · Tonic (gRPC) · SQLx · PostgreSQL · JSONL  
+Tracing · OpenTelemetry · Jaeger  
+Docker · GitHub Actions · cargo-deny  
 
 
-## 🧪 Development Notes
+# Recent Improvements
 
-This repository is a personal development project.
-This project is an educational but production-grade architecture showcase for Rust backend systems.
-The goal is to showcase Rust architecture, testing, and systems design practices — not to provide a production-ready tool.
-
-## 🚢 Deployment (Staging + Production)
-
-RustPulse uses the same production-like deployment model in **staging** and **production**:
-
-- **Linux VM + Docker containers**
-- Orchestrated with **Docker Compose**
-- Managed by **systemd**
-- Environment-specific behavior is controlled **only** via injected environment variables and **server-side env files**
-
-Files:
-- Compose: `compose.staging.yaml`, `compose.prod.yaml`
-- systemd units: `deploy/systemd/rustpulse-staging.service`, `deploy/systemd/rustpulse.service`
-- Env file examples: `deploy/env/rustpulse.staging.env.example`, `deploy/env/rustpulse.prod.env.example`
-
-Prod fail-fast:
-- If `APP_ENV=prod`, the backend exits with an error if any of these are missing: `PORT`, `DATABASE_URL`, `JWT_SECRET`.
+• PostgreSQL wiring with environment-driven configuration  
+• SQLx setup documentation and schema initialization  
+• CRC32 validation for /telemetry endpoint  
+• OpenTelemetry tracing with Jaeger spans  
+• improved CI pipeline with cargo-deny  
+• concurrency configuration in CI workflow  
 
 
-## 📚 Documentation
+# Documentation
 
-Documentation will be hosted on docs.rs￼ after the first crate release.
-Detailed case studies and weekly changelogs are available on the RustPulse Landing Page￼.
+[Observability (OpenTelemetry + Jaeger)](https://github.com/VinEckSie/rustpulse/blob/main/docs/observability.md)  
+Local distributed tracing configuration and span instrumentation.
 
-- `docs/observability.md` — [Observability (OpenTelemetry + Jaeger)](docs/observability.md)
-- `docs/crc32.md` — [CRC-32 ingest testing (POST /telemetry)](docs/crc32.md)
-- `docs/persistence.md` — [Persistence](docs/persistence.md)
-- `docs/deployment_runbook.md` — [Deployment runbook](docs/deployment_runbook.md)
+[CRC32 validation](https://github.com/VinEckSie/rustpulse/blob/main/docs/crc32.md)  
+Integrity validation for `/telemetry` ingestion requests.
 
+[Persistence](https://github.com/VinEckSie/rustpulse/blob/main/docs/persistence.md)  
+PostgreSQL wiring, JSONL fallback strategy, and storage decisions.
 
-## 📄 License
+[Deployment runbook](https://github.com/VinEckSie/rustpulse/blob/main/docs/deployment_runbook.md)  
+Staging and production setup using Docker Compose and systemd.
 
-Dual-licensed under MIT OR Apache-2.0.
-You may choose either license.
+# Purpose
 
-</br>
+RustPulse explores how to design maintainable Rust services with emphasis on:
 
-Thanks for checking out RustPulse!  
-Follow the technical case study for deeper dives into its architecture, testing strategy, and telemetry runtime design in Rust.
+• clear architecture boundaries  
+• async and concurrent data pipelines  
+• observability and runtime introspection  
+• reliable persistence strategies  
+• production-oriented engineering practices  
 
+It serves as a practical reference for system-oriented Rust development.
 
+# License
 
-
+MIT OR Apache-2.0
