@@ -19,23 +19,23 @@ RustPulse ingests and processes telemetry from distributed nodes using a modular
 
 Focus areas:
 
-• async processing with Axum + Tonic (gRPC)  
-• PostgreSQL persistence with JSONL fallback  
-• structured tracing and observability  
-• clean hexagonal architecture  
-• production-style CI validation  
+• async processing with Axum + Tonic (gRPC)
+• PostgreSQL persistence with JSONL fallback
+• structured tracing and observability
+• clean hexagonal architecture
+• production-style CI validation
 
 
 # Key Capabilities
 
-• REST + gRPC ingestion endpoints  
-• PostgreSQL storage via SQLx with idempotent schema init  
-• JSONL fallback for offline-first scenarios  
-• structured logging with tracing  
-• OpenTelemetry tracing with Jaeger (local)  
-• CRC32 request validation for data integrity  
-• configurable environment-based runtime behaviour  
-• CI pipeline with clippy, tests, coverage, cargo-deny  
+• REST + gRPC ingestion endpoints
+• PostgreSQL storage via SQLx with idempotent schema init
+• JSONL fallback for offline-first scenarios
+• structured logging with tracing
+• OpenTelemetry tracing with Jaeger (local)
+• CRC32 request validation for data integrity
+• configurable environment-based runtime behaviour
+• CI pipeline with clippy, tests, coverage, cargo-deny
 
 
 # Architecture
@@ -46,56 +46,74 @@ domain logic • application services • infrastructure adapters
 
 Core domains:
 
-• Node identity lifecycle  
-• telemetry ingestion pipeline  
-• validation and transformation flow  
+• Node identity lifecycle
+• telemetry ingestion pipeline
+• validation and transformation flow
 
 Design principles:
 
-DDD-inspired boundaries  
-TDD-oriented workflow  
-composable ports and adapters  
+DDD-inspired boundaries
+TDD-oriented workflow
+composable ports and adapters
 
 # Tech Stack
 
-Rust · Axum · Tonic (gRPC) · SQLx · PostgreSQL · JSONL  
-Tracing · OpenTelemetry · Jaeger  
-Docker · GitHub Actions · cargo-deny  
+Rust · Axum · Tonic (gRPC) · SQLx · PostgreSQL · JSONL
+Tracing · OpenTelemetry · Jaeger
+Docker · GitHub Actions · cargo-deny
 
 
 # Recent Improvements
 
-• PostgreSQL wiring with environment-driven configuration  
-• SQLx setup documentation and schema initialization  
-• CRC32 validation for /telemetry endpoint  
-• OpenTelemetry tracing with Jaeger spans  
-• improved CI pipeline with cargo-deny  
-• concurrency configuration in CI workflow  
+• PostgreSQL wiring with environment-driven configuration
+• SQLx setup documentation and schema initialization
+• CRC32 validation for /telemetry endpoint
+• OpenTelemetry tracing with Jaeger spans
+• improved CI pipeline with cargo-deny
+• concurrency configuration in CI workflow
 
 
-# Documentation
+## 🧪 Development Notes
 
-[Observability (OpenTelemetry + Jaeger)](https://github.com/VinEckSie/rustpulse/blob/main/docs/observability.md)  
-Local distributed tracing configuration and span instrumentation.
+This repository is a personal development project.
+This project is an educational but production-grade architecture showcase for Rust backend systems.
+The goal is to showcase Rust architecture, testing, and systems design practices — not to provide a production-ready tool.
 
-[CRC32 validation](https://github.com/VinEckSie/rustpulse/blob/main/docs/crc32.md)  
-Integrity validation for `/telemetry` ingestion requests.
+## 🚢 Deployment (Staging + Production)
 
-[Persistence](https://github.com/VinEckSie/rustpulse/blob/main/docs/persistence.md)  
-PostgreSQL wiring, JSONL fallback strategy, and storage decisions.
+RustPulse uses the same production-like deployment model in **staging** and **production**:
 
-[Deployment runbook](https://github.com/VinEckSie/rustpulse/blob/main/docs/deployment_runbook.md)  
-Staging and production setup using Docker Compose and systemd.
+- **Linux VM + Docker containers**
+- Orchestrated with **Docker Compose**
+- Managed by **systemd**
+- Environment-specific behavior is controlled **only** via injected environment variables and **server-side env files**
 
-# Purpose
+Files:
+- Compose: `compose.staging.yaml`, `compose.prod.yaml`
+- systemd units: `deploy/systemd/rustpulse-staging.service`, `deploy/systemd/rustpulse.service`
+- Env file examples: `deploy/env/rustpulse.staging.env.example`, `deploy/env/rustpulse.prod.env.example`
+
+Prod fail-fast:
+- If `APP_ENV=prod`, the backend exits with an error if any of these are missing: `PORT`, `DATABASE_URL`, `JWT_SECRET`.
+
+
+## 📚 Documentation
+
+Documentation will be hosted on docs.rs￼ after the first crate release.
+Detailed case studies and weekly changelogs are available on the RustPulse Landing Page￼.
+
+- `docs/observability.md` — [Observability (OpenTelemetry + Jaeger)](docs/observability.md)
+- `docs/crc32.md` — [CRC-32 ingest testing (POST /telemetry)](docs/crc32.md)
+- `docs/persistence.md` — [Persistence](docs/persistence.md)
+- `docs/deployment_runbook.md` — [Deployment runbook](docs/deployment_runbook.md)
 
 RustPulse explores how to design maintainable Rust services with emphasis on:
 
-• clear architecture boundaries  
-• async and concurrent data pipelines  
-• observability and runtime introspection  
-• reliable persistence strategies  
-• production-oriented engineering practices  
+• clear architecture boundaries
+• async and concurrent data pipelines
+• observability and runtime introspection
+• reliable persistence strategies
+• production-oriented engineering practices
 
 It serves as a practical reference for system-oriented Rust development.
 
