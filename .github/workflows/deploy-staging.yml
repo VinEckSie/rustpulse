@@ -94,4 +94,4 @@ jobs:
 
       - name: Smoke test
         run: |
-        curl --fail --retry 12 --retry-delay 5 \ "http://${{ secrets.STAGING_APP_HOST }}:${{ secrets.STAGING_APP_PORT }}/health"
+          curl --fail --retry 12 --retry-delay 5 \ "http://${{ secrets.STAGING_APP_HOST }}:${{ secrets.STAGING_APP_PORT }}/health"
