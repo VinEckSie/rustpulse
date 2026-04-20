@@ -3,9 +3,15 @@
 FROM rust:1.86-bookworm AS builder
 WORKDIR /app
 
-COPY Cargo.toml Cargo.lock ./
-COPY Cargo.toml Cargo.toml
-COPY src src
+COPY . .
+
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    libpq-dev \
+    protobuf-compiler \
+    && rm -rf /var/lib/apt/lists/*
+
 
 RUN cargo build --bin rustpulse --release
 
