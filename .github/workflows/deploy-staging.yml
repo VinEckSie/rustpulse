@@ -61,7 +61,8 @@ jobs:
 
       - name: Test SSH connection
         run: |
-          ssh -vvv -o StrictHostKeyChecking=yes \
+          ssh -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
             -p "${{ secrets.STAGING_SSH_PORT }}" \
             "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" \
             "echo connected"
