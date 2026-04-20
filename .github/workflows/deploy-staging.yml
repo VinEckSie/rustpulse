@@ -59,6 +59,13 @@ jobs:
         with:
           ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
 
+      - name: Test SSH connection
+        run: |
+          ssh -vvv -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" \
+            "echo connected"
+
       - name: Upload deployment files
         run: |
           scp -P "${{ secrets.STAGING_SSH_PORT }}" \
