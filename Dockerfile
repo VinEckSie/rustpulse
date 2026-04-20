@@ -1,9 +1,7 @@
 # syntax=docker/dockerfile:1
 
-FROM rust:1.86-bookworm AS builder
+FROM rust:1-bookworm AS builder
 WORKDIR /app
-
-COPY . .
 
 RUN apt-get update && apt-get install -y \
     pkg-config \
@@ -12,6 +10,7 @@ RUN apt-get update && apt-get install -y \
     protobuf-compiler \
     && rm -rf /var/lib/apt/lists/*
 
+COPY . .
 
 RUN cargo build --bin rustpulse --release
 
