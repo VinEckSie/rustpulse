@@ -17,6 +17,7 @@ env:
   IMAGE_NAME: ghcr.io/vinecksie/rustpulse
   DEPLOY_DIR: /opt/rustpulse
   ENV_FILE: /opt/rustpulse/env/rustpulse.staging.env
+  BUILDKIT_PROGRESS: plain
 
 jobs:
   build-and-deploy:
