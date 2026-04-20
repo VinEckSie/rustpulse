@@ -61,6 +61,10 @@ jobs:
           chmod 600 ~/.ssh/staging_key
           ssh-keyscan -p "${{ secrets.STAGING_SSH_PORT }}" -H "${{ secrets.STAGING_SSH_HOST }}" >> ~/.ssh/known_hosts
 
+      - name: Show loaded public key
+        run: |
+          ssh-keygen -y -f ~/.ssh/staging_key
+
       - name: Test SSH connection
         run: |
           ssh -i ~/.ssh/staging_key \
