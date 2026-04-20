@@ -54,28 +54,35 @@ jobs:
           mkdir -p ~/.ssh
           ssh-keyscan -p "${{ secrets.STAGING_SSH_PORT }}" -H "${{ secrets.STAGING_SSH_HOST }}" >> ~/.ssh/known_hosts
 
-      - name: Start ssh-agent
-        uses: webfactory/ssh-agent@v0.9.0
-        with:
-          ssh-private-key: ${{ secrets.STAGING_SSH_KEY }}
+      - name: Write SSH key
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' '${{ secrets.STAGING_SSH_KEY }}' > ~/.ssh/staging_key
+          chmod 600 ~/.ssh/staging_key
+          ssh-keyscan -p "${{ secrets.STAGING_SSH_PORT }}" -H "${{ secrets.STAGING_SSH_HOST }}" >> ~/.ssh/known_hosts
 
       - name: Test SSH connection
         run: |
-          ssh -o BatchMode=yes \
+          ssh -i ~/.ssh/staging_key \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
             -o StrictHostKeyChecking=yes \
             -p "${{ secrets.STAGING_SSH_PORT }}" \
             "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" \
             "echo connected"
-
+            
       - name: Upload deployment files
         run: |
-          scp -P "${{ secrets.STAGING_SSH_PORT }}" \
+          scp -i ~/.ssh/staging_key -o IdentitiesOnly=yes -P "${{ secrets.STAGING_SSH_PORT }}" \
             compose.staging.yaml \
             "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}:/tmp/compose.staging.yaml"
-
-          scp -P "${{ secrets.STAGING_SSH_PORT }}" \
+      
+          scp -i ~/.ssh/staging_key -o IdentitiesOnly=yes -P "${{ secrets.STAGING_SSH_PORT }}" \
             deploy/systemd/rustpulse-staging.service \
             "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}:/tmp/rustpulse-staging.service"
+      
+          ssh -i ~/.ssh/staging_key -o IdentitiesOnly=yes -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" <<EOF
 
       - name: Deploy on staging VM
         env:
