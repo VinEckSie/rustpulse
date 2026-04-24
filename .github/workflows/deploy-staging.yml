@@ -112,7 +112,7 @@ jobs:
             sudo systemctl daemon-reload
             sudo systemctl enable rustpulse-staging
             sudo systemctl restart rustpulse-staging
-                EOF
+          EOF
       
       - name: Smoke test
         run: |
