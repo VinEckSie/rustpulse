@@ -92,19 +92,23 @@ jobs:
         env:
           RUSTPULSE_STAGING_ENV_B64: ${{ secrets.RUSTPULSE_STAGING_ENV_B64 }}
         run: |
-          ssh -p "${{ secrets.STAGING_SSH_PORT }}" \
+          ssh -i ~/.ssh/staging_key \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.STAGING_SSH_PORT }}" \
             "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" <<EOF
             set -euo pipefail
-
+      
             sudo mkdir -p ${DEPLOY_DIR}/env
-
+      
             sudo install -m 644 /tmp/compose.staging.yaml ${DEPLOY_DIR}/compose.staging.yaml
             sudo install -m 644 /tmp/rustpulse-staging.service /etc/systemd/system/rustpulse-staging.service
-
+      
             printf '%s' "${RUSTPULSE_STAGING_ENV_B64}" | base64 -d | sudo tee ${ENV_FILE} > /dev/null
             echo "IMAGE_TAG=${IMAGE_TAG}" | sudo tee -a ${ENV_FILE} > /dev/null
             sudo chmod 600 ${ENV_FILE}
-
+      
             sudo systemctl daemon-reload
             sudo systemctl enable rustpulse-staging
             sudo systemctl restart rustpulse-staging
