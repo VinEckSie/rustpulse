@@ -113,6 +113,17 @@ jobs:
             sudo systemctl enable rustpulse-staging
             sudo systemctl restart rustpulse-staging
           EOF
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/staging_key \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" \
+            "sudo -n journalctl -u rustpulse-staging -n 100 --no-pager"
       
       - name: Smoke test
         run: |
