@@ -1,0 +1,68 @@
+name: rollback-staging
+
+on:
+  workflow_dispatch:
+    inputs:
+      image_tag:
+        description: ""
+        required: true
+        type: string
+
+permissions:
+  contents: read
+
+concurrency:
+  group: rollback-staging
+  cancel-in-progress: false
+
+env:
+  ENV_FILE: /opt/rustpulse/env/rustpulse.staging.env
+
+jobs:
+  rollback:
+    runs-on: ubuntu-latest
+    environment: staging
+
+    steps:
+      - name: Prepare SSH known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -p "${{ secrets.STAGING_SSH_PORT }}" -H "${{ secrets.STAGING_SSH_HOST }}" >> ~/.ssh/known_hosts
+
+      - name: Write SSH key
+        run: |
+          install -m 700 -d ~/.ssh
+          printf '%s\n' '${{ secrets.STAGING_SSH_KEY }}' > ~/.ssh/staging_key
+          chmod 600 ~/.ssh/staging_key
+
+      - name: Rollback staging
+        run: |
+          ssh -i ~/.ssh/staging_key \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" <<EOF
+          set -euo pipefail
+
+          sudo sed -i 's/^IMAGE_TAG=.*/IMAGE_TAG=${{ inputs.image_tag }}/' ${ENV_FILE}
+
+          sudo systemctl restart rustpulse-staging
+          sudo systemctl status rustpulse-staging --no-pager
+          EOF
+
+      - name: Smoke test
+        run: |
+          curl --fail --retry 12 --retry-delay 5 \
+            "http://${{ secrets.STAGING_APP_HOST }}:${{ secrets.STAGING_APP_PORT }}/health"
+
+      - name: Show logs on failure
+        if: failure()
+        run: |
+          ssh -i ~/.ssh/staging_key \
+            -o IdentitiesOnly=yes \
+            -o BatchMode=yes \
+            -o StrictHostKeyChecking=yes \
+            -p "${{ secrets.STAGING_SSH_PORT }}" \
+            "${{ secrets.STAGING_SSH_USER }}@${{ secrets.STAGING_SSH_HOST }}" \
+            "sudo journalctl -u rustpulse-staging -n 100 --no-pager"
