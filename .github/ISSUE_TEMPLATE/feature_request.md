@@ -2,7 +2,7 @@
 name: Feature request
 about: Suggest a new feature
 title: "feat: "
-labels: feature-request
+labels: feat
 ---
 
 ## Problem
