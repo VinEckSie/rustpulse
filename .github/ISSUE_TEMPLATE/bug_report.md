@@ -2,7 +2,7 @@
 name: Bug report
 about: Report something broken
 title: "fix: "
-labels: bug
+labels: fix
 ---
 
 ## Description
