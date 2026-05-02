@@ -1,105 +1,147 @@
-# ⚡ RustPulse — Real-Time Telemetry Engine in Rust
+# RustPulse: Real-Time Telemetry Engine in Rust
 
-[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
-[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/audit.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
-[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 [![Rust](https://img.shields.io/badge/rust-stable-orange)](https://www.rust-lang.org/)
-[![Last Commit](https://img.shields.io/github/last-commit/vinecksie/rustpulse)](https://github.com/vinecksie/rustpulse)
+[![CI](https://github.com/vinecksie/rustpulse/actions/workflows/ci.yml/badge.svg)](https://github.com/vinecksie/rustpulse/actions)
+[![License: MIT OR Apache-2.0](https://img.shields.io/badge/license-MIT%20OR%20Apache--2.0-blue)](./LICENSE)
 
-RustPulse is an **async telemetry engine** exploring how to build reliable data pipelines and well-structured systems in Rust.
+> Production-style Rust telemetry system with real ingestion, CI/CD, and observability.
 
-Designed as a **case study in systems design**, observability, and production-oriented engineering practices.
+Telemetry engine designed for **distributed and edge environments**:
 
-📘 Case study → https://vinecksie.super.site/rustpulse
-
-
-# Overview
-
-RustPulse ingests and processes telemetry from distributed nodes using a modular architecture that isolates domain logic from infrastructure concerns.
-
-Focus areas:
-
-• async processing with Axum + Tonic (gRPC)
-• PostgreSQL persistence with JSONL fallback
-• structured tracing and observability
-• clean hexagonal architecture
-• production-style CI validation
+- handles intermittent connectivity  
+- idempotent ingestion pipeline  
+- PostgreSQL + fallback storage (JSONL)  
+- structured logging + tracing  
+- Dockerized + CI/CD ready  
 
 
-# Key Capabilities
+Case study → https://vinecksie.super.site/rustpulse
 
-• REST + gRPC ingestion endpoints
-• PostgreSQL storage via SQLx with idempotent schema init
-• JSONL fallback for offline-first scenarios
-• structured logging with tracing
-• OpenTelemetry tracing with Jaeger (local)
-• CRC32 request validation for data integrity
-• configurable environment-based runtime behaviour
-• CI pipeline with clippy, tests, coverage, cargo-deny
+---
 
+## 🚀 What this product demonstrates
 
-# Architecture
+- Hexagonal architecture (clear separation of concerns)
+- Real ingestion via Rust CLI agent (no mock-only flow)
+- CI pipeline (fmt, clippy, deny, test, coverage)
+- Observability with tracing + OpenTelemetry + Jaeger
+- Production-style deployment for Staging and Prod (Docker + env config)
 
-RustPulse follows a **hexagonal architecture** separating:
+## ▶️ Run locally
 
-domain logic • application services • infrastructure adapters
+```bash
+just jaeger      # start observability (Jaeger)
+just backend     # start RustPulse
+```
 
-Core domains:
+Health check:
+```bash
+curl http://127.0.0.1:3000/health
+```
 
-• Node identity lifecycle
-• telemetry ingestion pipeline
-• validation and transformation flow
+Generate traces:
+```bash
+curl http://127.0.0.1:3000/metrics
+```
 
-Design principles:
+Run the telemetry agent:
+```bash
+cargo run --bin agent
+```
 
-DDD-inspired boundaries
-TDD-oriented workflow
-composable ports and adapters
+Run the Rust agent
+```rust
+cargo run --bin agent
+```
+👉 Full setup, environment variables, and observability guide:
+[docs/observability.md](docs/observability.md)
 
-# Tech Stack
-
-Rust · Axum · Tonic (gRPC) · SQLx · PostgreSQL · JSONL
-Tracing · OpenTelemetry · Jaeger
-Docker · GitHub Actions · cargo-deny
-
-
-# Recent Improvements
-
-• PostgreSQL wiring with environment-driven configuration
-• SQLx setup documentation and schema initialization
-• CRC32 validation for /telemetry endpoint
-• OpenTelemetry tracing with Jaeger spans
-• improved CI pipeline with cargo-deny
-• concurrency configuration in CI workflow
+## 🏗️ Hexagonal Architecture
+<img width="1417" height="626" alt="image" src="https://github.com/user-attachments/assets/849f6021-0aab-462b-bc8a-e202a886015a" />
 
 
-# Documentation
+### Flow
+Agent → HTTP API → Application Service → Domain → Repository → Storage
 
-This repository is a personal development project.
-This project is an educational but production-grade architecture showcase for Rust backend systems.
-The goal is to showcase Rust architecture, testing, and systems design practices — not to provide a production-ready tool.
+### Principles
+- domain-driven design
+- composable ports & adapters
+- testable application services
+- strict separation of concerns
 
-## 🚢 Deployment (Staging + Production)
+### ⚙️ Operational Guarantees
+- Reliability
+- idempotent ingestion strategy
+- fallback storage (JSONL)
+- retry-ready design (extensible)
 
-RustPulse uses the same production-like deployment model in **staging** and **production**:
+### Failure handling
+- DB unavailable → fallback to file storage
+- invalid payload → rejected early
+- config errors → fail fast at startup
+- async processing model
 
-- **Linux VM + Docker containers**
-- Orchestrated with **Docker Compose**
-- Managed by **systemd**
-- Environment-specific behavior is controlled **only** via injected environment variables and **server-side env files**
+### Health
+- /health endpoint
+- readiness checks (extensible)
 
-# Purpose
+## 🔍 Observability
+- structured logging with tracing
+- request-level visibility
+- OpenTelemetry integration (Jaeger)
+- correlation-ready design (request IDs planned)
 
-RustPulse explores how to design maintainable Rust services with emphasis on:
+## 📦 Deployment
+- Docker (multi-stage builds)
+- Docker Compose orchestration
+- environment-based configuration
+- reproducible builds
 
-• clear architecture boundaries
-• async and concurrent data pipelines
-• observability and runtime introspection
-• reliable persistence strategies
-• production-oriented engineering practices
+## 🧪 CI Pipeline
+- fmt
+- clippy
+- deny (dependency audit)
+- tests
+- coverage
 
-It serves as a practical reference for system-oriented Rust development.
+## 🧠 Design Decisions & Trade-offs
 
-# License
+**Hexagonal architecture**
 
+Why:
+- isolates domain logic
+- improves testability
+- enables multiple adapters
+
+Trade-off:
+- more boilerplate vs long-term maintainability
+
+**PostgreSQL + JSONL fallback**
+
+Why:
+- PostgreSQL → strong querying capabilities
+- JSONL → resilience in degraded environments
+
+Trade-off:
+- dual storage complexity
+
+**REST + gRPC**
+
+Why:
+- REST → simplicity & compatibility
+- gRPC → performance & internal communication
+
+Trade-off:
+- increased maintenance surface
+
+## 🎯 Purpose
+RustPulse is a production-oriented engineering case study.
+
+It demonstrates:
+- system design in Rust
+- real-world backend constraints
+- observability and reliability patterns
+- clean architecture in practice
+
+## 📄 License
 MIT OR Apache-2.0
