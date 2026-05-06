@@ -1,16 +1,16 @@
 //! Request tracing middleware for HTTP routes.
 
+use axum::http::{HeaderName, HeaderValue};
 use axum::{
     extract::{MatchedPath, Request},
     middleware::Next,
     response::Response,
 };
-use axum::http::{HeaderName, HeaderValue};
 use opentelemetry::trace::TraceContextExt as _;
-use uuid::Uuid;
 use tracing::Instrument as _;
 use tracing::field;
 use tracing_opentelemetry::OpenTelemetrySpanExt as _;
+use uuid::Uuid;
 
 static REQUEST_ID_HEADER: HeaderName = HeaderName::from_static("x-request-id");
 
@@ -69,7 +69,9 @@ pub async fn trace_middleware(req: Request, next: Next) -> Response {
     span.record("http.status_code", response.status().as_u16());
 
     if let Ok(value) = HeaderValue::from_str(&request_id) {
-        response.headers_mut().insert(REQUEST_ID_HEADER.clone(), value);
+        response
+            .headers_mut()
+            .insert(REQUEST_ID_HEADER.clone(), value);
     }
     response
 }
