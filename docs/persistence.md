@@ -6,8 +6,8 @@ Goal: start Postgres locally, boot RustPulse (which initializes the schema), the
 
 ### 1) Start Postgres
 
-- docker compose -f docker-compose.yml up -d postgres
-- docker compose -f docker-compose.yml ps
+- docker compose -f compose.yml up -d postgres
+- docker compose -f compose.yml ps
 
 ### 2) Enable Postgres storage
 
@@ -18,15 +18,15 @@ DATABASE_URL=postgres://rustpulse:<password>@127.0.0.1:5432/rustpulse
 
 ### 3) Boot the backend (creates/updates schema)
 
-- cargo run --bin rustpulse
+- just backend
 
 Expected boot logs in Postgres mode:
-- `db.migrate`
+- `db.migrate.start`
 - `db.ready`
 
 ### 4) Open a SQL shell (psql)
 
-- docker compose -f docker-compose.yml exec postgres psql -U rustpulse -d rustpulse
+- docker compose -f compose.yml exec postgres psql -U rustpulse -d rustpulse
 
 ### 5) Verify schema + data
 
@@ -43,6 +43,8 @@ select source_id, server_id, timestamp from telemetry order by timestamp desc li
 In another terminal:
 
 - just telemetry-ingest-no-crc
+or
+- cargo run --bin agent
 
 Back in `psql`:
 
@@ -60,8 +62,8 @@ truncate telemetry;
 
 Stop Postgres:
 
-- Container and network: docker compose -f docker-compose.yml down
-- To wipe data too: docker compose -f docker-compose.yml down -v
+- Container and network: docker compose -f compose.yml down
+- To wipe data too: docker compose -f compose.yml down -v
 
 ## Test commands (fast)
 
@@ -73,5 +75,6 @@ These tests skip the “real DB” cases unless `DATABASE_URL` is set in your en
 
 ## INFO: Where the SQL lives
 
-- Boot-time schema init: `src/infra/startup.rs`
+- Migrations (schema): `migrations/`
+- Boot-time migration runner: `src/infra/startup.rs`
 - Repo queries (INSERT/SELECT): `src/adapters/output/postgres_telemetry_repo.rs`

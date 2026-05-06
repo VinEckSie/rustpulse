@@ -38,3 +38,4 @@ backend/src/handlers/scratch.rs
 logs/
 backend/logs/
 *.log
+*.pub

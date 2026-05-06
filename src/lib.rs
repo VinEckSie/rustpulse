@@ -4,7 +4,7 @@
 //!
 //! # Examples
 //!
-//! Start the HTTP server (typically from the `rustpulse` binary):
+//! Start the HTTP server (typically from the `rustpulse` binary at `src/main.rs`):
 //!
 //! ```rust,no_run
 //! #[tokio::main]

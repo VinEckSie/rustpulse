@@ -215,32 +215,13 @@ rustpulse-postgres-staging
 
 Test API:
 ```bash
-curl http://204.168.188.43:8080/healthz
+curl http://204.168.188.43:8080/health
 ````
-
-## 6. Verify deployment
-Check systemd status:
-```bash
-systemctl status rustpulse-staging
-```
 
 Check logs:
 ```bash
 journalctl -u rustpulse-staging -n 100 --no-pager
 ````
-
-Verify container:
-```bash
-docker ps
-````
-
-Check health endpoint:
-```bash
-curl http://SERVER_IP:8080/health
-````
-
-Expected response:
-200 OK
 
 ## 7. Routine updates
 Each push to main:
