@@ -5,10 +5,14 @@ use axum::{
     middleware::Next,
     response::Response,
 };
+use axum::http::{HeaderName, HeaderValue};
 use opentelemetry::trace::TraceContextExt as _;
+use uuid::Uuid;
 use tracing::Instrument as _;
 use tracing::field;
 use tracing_opentelemetry::OpenTelemetrySpanExt as _;
+
+static REQUEST_ID_HEADER: HeaderName = HeaderName::from_static("x-request-id");
 
 /// Axum middleware that creates a span per HTTP request and enriches it with
 /// route, method, status code, and (when available) the OpenTelemetry trace id.
@@ -32,12 +36,22 @@ pub async fn trace_middleware(req: Request, next: Next) -> Response {
         .unwrap_or_else(|| req.uri().path().to_string());
     let otel_name = format!("{method} {route}");
 
+    let request_id = req
+        .headers()
+        .get(&REQUEST_ID_HEADER)
+        .and_then(|v| v.to_str().ok())
+        .map(str::trim)
+        .filter(|s| !s.is_empty())
+        .map(str::to_string)
+        .unwrap_or_else(|| Uuid::new_v4().to_string());
+
     let span = tracing::info_span!(
         "http.request",
         "otel.name" = %otel_name,
         "http.method" = %method,
         "http.route" = %route,
         "http.status_code" = field::Empty,
+        request_id = %request_id,
         trace_id = field::Empty,
     );
 
@@ -51,8 +65,12 @@ pub async fn trace_middleware(req: Request, next: Next) -> Response {
         }
     }
 
-    let response = next.run(req).instrument(span.clone()).await;
+    let mut response = next.run(req).instrument(span.clone()).await;
     span.record("http.status_code", response.status().as_u16());
+
+    if let Ok(value) = HeaderValue::from_str(&request_id) {
+        response.headers_mut().insert(REQUEST_ID_HEADER.clone(), value);
+    }
     response
 }
 
@@ -189,6 +207,8 @@ mod tests {
             span.fields.get("otel.name").map(String::as_str),
             Some("GET /health")
         );
+        let request_id = span.fields.get("request_id").cloned().unwrap_or_default();
+        assert!(!request_id.is_empty());
     }
 
     #[tokio::test]
@@ -211,6 +231,28 @@ mod tests {
             span.fields.get("http.status_code").map(String::as_str),
             Some("200")
         );
+    }
+
+    #[tokio::test]
+    async fn test_http_request_sets_response_request_id_header() {
+        let captured = Captured::default();
+        let subscriber = tracing_subscriber::registry().with(CaptureLayer::new(captured.clone()));
+        let _guard = tracing::subscriber::set_default(subscriber);
+
+        let app = build_app();
+        let req = HttpRequest::builder()
+            .method("GET")
+            .uri("/health")
+            .body(Body::empty())
+            .unwrap();
+
+        let resp = app.oneshot(req).await.unwrap();
+        let header = resp
+            .headers()
+            .get("x-request-id")
+            .and_then(|v| v.to_str().ok())
+            .unwrap_or("");
+        assert!(!header.is_empty());
     }
 
     #[tokio::test]
