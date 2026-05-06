@@ -28,10 +28,11 @@ thiserror = "2.0.12"
 uuid = { version = "1", features = ["serde", "v4"] }
 chrono = { version = "0.4", features = ["serde"] }
 serde = { version = "1", features = ["derive"] }
-
 rand = "0.10.0"
 async-trait = "0.1.88"
-sqlx = { version = "0.8.3", default-features = false, features = ["runtime-tokio", "postgres", "uuid", "chrono", "json"] }
+sqlx = { version = "0.8.3", default-features = false, features = ["runtime-tokio", "postgres", "uuid", "chrono", "json", "migrate", "macros"] }
+reqwest = { version = "0.13.3", features = ["json"] }
+
 
 [features]
 default = ["aero"]

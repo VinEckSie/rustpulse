@@ -14,12 +14,21 @@ use std::path::PathBuf;
 use std::sync::Arc;
 use tracing::instrument;
 
+// static MIGRATOR: sqlx::migrate::Migrator = sqlx::migrate!();
+use sqlx::migrate::Migrator;
+
+static MIGRATOR: Migrator = sqlx::migrate!();
+
 #[derive(thiserror::Error, Debug)]
 /// Errors that can occur during infrastructure bootstrapping.
 pub enum InfraBootError {
     /// Database connection failure.
     #[error(transparent)]
     Db(#[from] postgres_db::DbError),
+
+    /// Migration execution error.
+    #[error(transparent)]
+    Migrate(#[from] sqlx::migrate::MigrateError),
 
     /// SQL execution error.
     #[error(transparent)]
@@ -30,7 +39,7 @@ pub enum InfraBootError {
     Io(#[from] std::io::Error),
 }
 
-/// Creates the `telemetry` table in Postgres if it does not exist.
+/// Runs embedded SQLx migrations against Postgres.
 ///
 /// # Examples
 ///
@@ -46,23 +55,8 @@ pub enum InfraBootError {
 /// # }
 /// ```
 pub async fn init_postgres_schema(pool: &sqlx::PgPool) -> Result<(), InfraBootError> {
-    tracing::info!("db.schema_init.start");
-
-    sqlx::query(
-        r#"
-CREATE TABLE IF NOT EXISTS telemetry (
-    source_id UUID NOT NULL,
-    server_id UUID NOT NULL,
-    timestamp TIMESTAMPTZ NOT NULL,
-    cpu DOUBLE PRECISION NULL,
-    memory DOUBLE PRECISION NULL,
-    temperature REAL NULL,
-    extras JSONB NOT NULL
-)
-"#,
-    )
-    .execute(pool)
-    .await?;
+    tracing::info!("db.migrate.start");
+    MIGRATOR.run(pool).await?;
 
     tracing::info!("db.ready");
     Ok(())
