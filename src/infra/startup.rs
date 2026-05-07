@@ -5,9 +5,7 @@ use crate::adapters::output::jsonl_repo::JsonlTelemetryRepo;
 use crate::adapters::output::postgres_db;
 use crate::adapters::output::postgres_telemetry_repo::PostgresTelemetryRepo;
 use crate::config::{Config, StorageMode};
-use crate::core::application::telemetry::{
-    TelemetryIngestCase, TelemetryQueryCase, TelemetryService,
-};
+use crate::core::application::{TelemetryIngestCase, TelemetryQueryCase, TelemetryService};
 use crate::infra::mock_telemetry::MockDataGenerator;
 use axum::Router;
 use std::path::PathBuf;
@@ -90,7 +88,7 @@ pub async fn init_postgres_schema(pool: &sqlx::PgPool) -> Result<(), InfraBootEr
 pub async fn build_telemetry_repository(
     config: &Config,
 ) -> Result<
-    Arc<dyn crate::core::application::telemetry::TelemetryRepository + Send + Sync>,
+    Arc<dyn crate::core::application::TelemetryRepository + Send + Sync>,
     InfraBootError,
 > {
     match config.storage_mode {

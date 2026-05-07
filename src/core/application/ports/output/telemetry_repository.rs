@@ -10,3 +10,4 @@ pub trait TelemetryRepository {
     /// Retrieves all telemetry, optionally filtered by a node/source identifier.
     async fn query_all(&self, node_id: Option<String>) -> anyhow::Result<Vec<Telemetry>>;
 }
+

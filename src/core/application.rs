@@ -1,3 +1,13 @@
 //! Application layer (use cases and ports).
 
-pub mod telemetry;
+/// Port traits (inputs/outputs) for use cases.
+pub mod ports;
+/// Use case implementations.
+pub mod usecases;
+
+// Re-exports for stable external paths.
+pub use ports::input::telemetry_ingest_usecase::TelemetryIngestCase;
+pub use ports::input::telemetry_query_usecase::TelemetryQueryCase;
+pub use ports::output::auth_repository::{PasswordHasher, TokenIssuer, UserRepo};
+pub use ports::output::telemetry_repository::TelemetryRepository;
+pub use usecases::telemetry_service::TelemetryService;

@@ -8,3 +8,4 @@ pub trait TelemetryIngestCase {
     /// Ingests a telemetry datapoint.
     async fn ingest(&self, telemetry: Telemetry) -> anyhow::Result<()>;
 }
+

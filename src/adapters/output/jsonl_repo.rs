@@ -5,7 +5,7 @@
 //! ```rust,no_run
 //! # async fn demo() -> anyhow::Result<()> {
 //! use rustpulse::adapters::output::jsonl_repo::JsonlTelemetryRepo;
-//! use rustpulse::core::application::telemetry::TelemetryRepository as _;
+//! use rustpulse::core::application::TelemetryRepository as _;
 //! use rustpulse::core::domains::telemetry::Telemetry;
 //! use chrono::Utc;
 //! use uuid::Uuid;
@@ -28,7 +28,7 @@
 //! ```
 
 // adapter/jsonl/telemetry_repo.rs
-use crate::core::application::telemetry::TelemetryRepository;
+use crate::core::application::TelemetryRepository;
 use crate::core::domains::telemetry::Telemetry;
 use std::fs::OpenOptions;
 use std::io::{BufRead, BufReader, Write};

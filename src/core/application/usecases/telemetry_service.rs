@@ -4,7 +4,7 @@
 //!
 //! ```rust,no_run
 //! # async fn demo() -> anyhow::Result<()> {
-//! use rustpulse::core::application::telemetry::{TelemetryQueryCase as _, TelemetryService, TelemetryRepository};
+//! use rustpulse::core::application::{TelemetryQueryCase as _, TelemetryService, TelemetryRepository};
 //! use rustpulse::core::domains::telemetry::Telemetry;
 //! use std::sync::Arc;
 //!
@@ -26,9 +26,9 @@
 //! # }
 //! ```
 
-use crate::core::application::telemetry::ports::input::telemetry_ingest_usecase::TelemetryIngestCase;
-use crate::core::application::telemetry::ports::input::telemetry_query_usecase::TelemetryQueryCase;
-use crate::core::application::telemetry::ports::output::telemetry_repository::TelemetryRepository;
+use crate::core::application::ports::input::telemetry_ingest_usecase::TelemetryIngestCase;
+use crate::core::application::ports::input::telemetry_query_usecase::TelemetryQueryCase;
+use crate::core::application::ports::output::telemetry_repository::TelemetryRepository;
 use crate::core::domains::telemetry::Telemetry;
 use std::sync::Arc;
 use tokio::time::{Duration, sleep};

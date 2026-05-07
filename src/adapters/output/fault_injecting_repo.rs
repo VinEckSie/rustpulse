@@ -1,6 +1,6 @@
 //! Telemetry repository wrapper that can inject faults for testing and demos.
 
-use crate::core::application::telemetry::TelemetryRepository;
+use crate::core::application::TelemetryRepository;
 use crate::core::domains::telemetry::Telemetry;
 use std::sync::Mutex;
 
