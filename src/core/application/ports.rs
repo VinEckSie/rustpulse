@@ -4,4 +4,3 @@
 pub mod input;
 /// Output ports required by use cases.
 pub mod output;
-

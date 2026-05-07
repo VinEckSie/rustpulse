@@ -87,10 +87,7 @@ pub async fn init_postgres_schema(pool: &sqlx::PgPool) -> Result<(), InfraBootEr
 /// ```
 pub async fn build_telemetry_repository(
     config: &Config,
-) -> Result<
-    Arc<dyn crate::core::application::TelemetryRepository + Send + Sync>,
-    InfraBootError,
-> {
+) -> Result<Arc<dyn crate::core::application::TelemetryRepository + Send + Sync>, InfraBootError> {
     match config.storage_mode {
         StorageMode::Jsonl => {
             let temp_file_path: PathBuf =
