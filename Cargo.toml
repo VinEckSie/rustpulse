@@ -32,6 +32,10 @@ rand = "0.10.0"
 async-trait = "0.1.88"
 sqlx = { version = "0.8.3", default-features = false, features = ["runtime-tokio", "postgres", "uuid", "chrono", "json", "migrate", "macros"] }
 reqwest = { version = "0.13.3", features = ["json"] }
+argon2 = "0.5.3"
+# Use the AWS-LC backend to avoid pulling in the `rsa` crate, which is flagged by
+# RUSTSEC-2023-0071 ("Marvin Attack") in RustCrypto's RSA implementation.
+jsonwebtoken = { version = "10.3.0", default-features = false, features = ["aws_lc_rs"] }
 
 
 [features]
