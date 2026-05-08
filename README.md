@@ -19,7 +19,7 @@ Case study → https://vinecksie.super.site/rustpulse
 
 ---
 
-## 🚀 What this product demonstrates
+## What this product demonstrates
 
 - Hexagonal architecture (clear separation of concerns)
 - Real ingestion via Rust CLI agent (no mock-only flow)
@@ -49,14 +49,10 @@ Run the telemetry agent:
 cargo run --bin agent
 ```
 
-Run the Rust agent
-```rust
-cargo run --bin agent
-```
 👉 Full setup, environment variables, and observability guide:
 [docs/observability.md](docs/observability.md)
 
-## 🏗️ Hexagonal Architecture
+## Hexagonal Architecture
 <img width="1417" height="626" alt="image" src="https://github.com/user-attachments/assets/849f6021-0aab-462b-bc8a-e202a886015a" />
 
 
@@ -69,7 +65,7 @@ Agent → HTTP API → Application Service → Domain → Repository → Storage
 - testable application services
 - strict separation of concerns
 
-### ⚙️ Operational Guarantees
+### Operational Guarantees
 - Reliability
 - idempotent ingestion strategy
 - fallback storage (JSONL)
@@ -85,26 +81,26 @@ Agent → HTTP API → Application Service → Domain → Repository → Storage
 - /health endpoint
 - readiness checks (extensible)
 
-## 🔍 Observability
+## Observability
 - structured logging with tracing
 - request-level visibility
 - OpenTelemetry integration (Jaeger)
 - correlation-ready design (request IDs planned)
 
-## 📦 Deployment
+## Deployment
 - Docker (multi-stage builds)
 - Docker Compose orchestration
 - environment-based configuration
 - reproducible builds
 
-## 🧪 CI Pipeline
+## CI Pipeline
 - fmt
 - clippy
 - deny (dependency audit)
 - tests
 - coverage
 
-## 🧠 Design Decisions & Trade-offs
+## Design Decisions & Trade-offs
 
 **Hexagonal architecture**
 
@@ -134,7 +130,7 @@ Why:
 Trade-off:
 - increased maintenance surface
 
-## 🎯 Purpose
+## Purpose
 RustPulse is a production-oriented engineering case study.
 
 It demonstrates:
@@ -143,5 +139,5 @@ It demonstrates:
 - observability and reliability patterns
 - clean architecture in practice
 
-## 📄 License
+## License
 MIT OR Apache-2.0
