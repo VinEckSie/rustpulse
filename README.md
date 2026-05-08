@@ -17,7 +17,6 @@ Telemetry engine designed for **distributed and edge environments**:
 
 Case study → https://vinecksie.super.site/rustpulse
 
----
 
 ## What this product demonstrates
 
@@ -42,6 +41,11 @@ curl http://127.0.0.1:3000/health
 Generate traces:
 ```bash
 curl http://127.0.0.1:3000/metrics
+```
+
+Run the product:
+```bash
+just backend
 ```
 
 Run the telemetry agent:
