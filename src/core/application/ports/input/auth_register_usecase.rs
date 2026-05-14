@@ -8,4 +8,3 @@ pub trait AuthRegisterUseCase: Send + Sync {
     /// Registers a new user.
     async fn register(&self, req: RegisterRequest) -> Result<RegisterResult, AuthError>;
 }
-

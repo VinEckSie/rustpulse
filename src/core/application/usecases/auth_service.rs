@@ -2,10 +2,11 @@
 
 use crate::core::application::ports::input::auth_login_usecase::AuthLoginUseCase;
 use crate::core::application::ports::input::auth_register_usecase::AuthRegisterUseCase;
-use crate::core::application::ports::output::auth_repository::{PasswordHasher, TokenIssuer, UserRepo};
+use crate::core::application::ports::output::auth_repository::{
+    PasswordHasher, TokenIssuer, UserRepo,
+};
 use crate::core::domains::auth::{
-    AuthError, LoginRequest, LoginResult, RegisterRequest, RegisterResult,
-    TokenIssuerError,
+    AuthError, LoginRequest, LoginResult, RegisterRequest, RegisterResult, TokenIssuerError,
 };
 use std::sync::Arc;
 use std::time::{Duration, SystemTime};
@@ -30,7 +31,11 @@ impl AuthService {
         hasher: Arc<dyn PasswordHasher + Send + Sync>,
         issuer: Arc<dyn TokenIssuer + Send + Sync>,
     ) -> Self {
-        Self { repo, hasher, issuer }
+        Self {
+            repo,
+            hasher,
+            issuer,
+        }
     }
 }
 

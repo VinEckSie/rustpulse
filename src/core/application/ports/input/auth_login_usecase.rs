@@ -13,4 +13,3 @@ pub trait AuthLoginUseCase: Send + Sync {
         token_ttl: std::time::Duration,
     ) -> Result<LoginResult, AuthError>;
 }
-

@@ -1,6 +1,8 @@
 use rustpulse::core::application::ports::input::auth_login_usecase::AuthLoginUseCase as _;
 use rustpulse::core::application::ports::input::auth_register_usecase::AuthRegisterUseCase as _;
-use rustpulse::core::application::ports::output::auth_repository::{PasswordHasher, TokenIssuer, UserRepo};
+use rustpulse::core::application::ports::output::auth_repository::{
+    PasswordHasher, TokenIssuer, UserRepo,
+};
 use rustpulse::core::application::usecases::auth_service::AuthService;
 use rustpulse::core::domains::auth::{
     AuthError, Email, JwtToken, LoginRequest, Password, PasswordHash, PasswordHasherError,
@@ -48,14 +50,14 @@ where
 {
     fn on_event(&self, event: &tracing::Event<'_>, _ctx: Context<'_, S>) {
         let mut fields = std::collections::BTreeMap::new();
-        event.record(&mut EventVisitor { fields: &mut fields });
+        event.record(&mut EventVisitor {
+            fields: &mut fields,
+        });
         self.events
             .0
             .lock()
             .expect("poisoned mutex")
-            .push(CapturedEvent {
-                fields,
-            });
+            .push(CapturedEvent { fields });
     }
 }
 
@@ -70,7 +72,11 @@ impl UserRepo for FakeRepo {
         self.find_by_email.lock().expect("poisoned mutex").clone()
     }
 
-    fn insert_user(&self, _email: &Email, _password_hash: &PasswordHash) -> Result<UserId, UserRepoError> {
+    fn insert_user(
+        &self,
+        _email: &Email,
+        _password_hash: &PasswordHash,
+    ) -> Result<UserId, UserRepoError> {
         self.insert_result.lock().expect("poisoned mutex").clone()
     }
 
@@ -89,7 +95,11 @@ impl PasswordHasher for FakeHasher {
         self.hash_result.lock().expect("poisoned mutex").clone()
     }
 
-    fn verify(&self, _password: &Password, _hash: &PasswordHash) -> Result<bool, PasswordHasherError> {
+    fn verify(
+        &self,
+        _password: &Password,
+        _hash: &PasswordHash,
+    ) -> Result<bool, PasswordHasherError> {
         self.verify_result.lock().expect("poisoned mutex").clone()
     }
 }
@@ -100,7 +110,11 @@ struct FakeIssuer {
 }
 
 impl TokenIssuer for FakeIssuer {
-    fn issue_access_token(&self, user_id: &UserId, expires_at: SystemTime) -> Result<JwtToken, TokenIssuerError> {
+    fn issue_access_token(
+        &self,
+        user_id: &UserId,
+        expires_at: SystemTime,
+    ) -> Result<JwtToken, TokenIssuerError> {
         self.issued
             .lock()
             .expect("poisoned mutex")
@@ -138,7 +152,11 @@ async fn test_register_success_persists_user_and_returns_user_id() {
     assert_eq!(out.user_id.0, "u1");
 
     let captured = events.0.lock().expect("poisoned mutex");
-    assert!(captured.iter().any(|e| e.fields.get("event").map(String::as_str) == Some("auth.register.success")));
+    assert!(
+        captured
+            .iter()
+            .any(|e| e.fields.get("event").map(String::as_str) == Some("auth.register.success"))
+    );
 }
 
 #[tokio::test]
@@ -180,7 +198,11 @@ async fn test_login_success_returns_token_and_expires_at() {
     assert_eq!(issued[0].1, now + ttl);
 
     let captured = events.0.lock().expect("poisoned mutex");
-    assert!(captured.iter().any(|e| e.fields.get("event").map(String::as_str) == Some("auth.login.success")));
+    assert!(
+        captured
+            .iter()
+            .any(|e| e.fields.get("event").map(String::as_str) == Some("auth.login.success"))
+    );
 }
 
 #[tokio::test]
