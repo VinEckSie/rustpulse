@@ -15,6 +15,10 @@ pub enum AuthError {
         /// Minimum password length.
         min: usize,
     },
+    /// The provided credentials are invalid.
+    ///
+    /// This error is intentionally ambiguous (it does not reveal whether the email exists).
+    InvalidCredentials,
     /// User repository port error.
     UserRepo(UserRepoError),
     /// Password hashing port error.
