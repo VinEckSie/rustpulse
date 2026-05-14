@@ -65,7 +65,7 @@ impl MockDataGenerator {
 mod tests {
     use super::*;
     use crate::adapters::output::jsonl_repo::JsonlTelemetryRepo;
-    use crate::core::application::telemetry::TelemetryRepository;
+    use crate::core::application::TelemetryRepository;
     use std::path::PathBuf;
     use tokio::runtime::Runtime;
 

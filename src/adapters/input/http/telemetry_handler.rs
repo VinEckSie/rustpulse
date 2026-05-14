@@ -1,6 +1,6 @@
 //! HTTP handlers for telemetry ingest and query.
 
-use crate::core::application::telemetry::{TelemetryIngestCase, TelemetryQueryCase};
+use crate::core::application::{TelemetryIngestCase, TelemetryQueryCase};
 use crate::core::domains::telemetry::Telemetry;
 use axum::Json;
 use axum::extract::{Query, Request, State};
@@ -21,7 +21,7 @@ use super::request_tracing;
 /// ```rust,no_run
 /// # async fn demo() -> anyhow::Result<()> {
 /// use rustpulse::adapters::input::http::telemetry_handler;
-/// use rustpulse::core::application::telemetry::TelemetryQueryCase;
+/// use rustpulse::core::application::TelemetryQueryCase;
 /// use rustpulse::core::domains::telemetry::Telemetry;
 /// use std::sync::Arc;
 ///
@@ -56,7 +56,7 @@ const MAX_TELEMETRY_BODY_BYTES: usize = 1024 * 1024;
 /// ```rust,no_run
 /// # async fn demo() -> anyhow::Result<()> {
 /// use rustpulse::adapters::input::http::telemetry_handler;
-/// use rustpulse::core::application::telemetry::TelemetryIngestCase;
+/// use rustpulse::core::application::TelemetryIngestCase;
 /// use rustpulse::core::domains::telemetry::Telemetry;
 /// use std::sync::Arc;
 ///
@@ -140,7 +140,7 @@ impl IntoResponse for TelemetryIngestHttpError {
 /// ```rust,no_run
 /// # async fn demo() -> anyhow::Result<()> {
 /// use rustpulse::adapters::input::http::telemetry_handler;
-/// use rustpulse::core::application::telemetry::TelemetryIngestCase;
+/// use rustpulse::core::application::TelemetryIngestCase;
 /// use rustpulse::core::domains::telemetry::Telemetry;
 /// use std::sync::Arc;
 ///
@@ -230,7 +230,7 @@ fn crc32_ieee(bytes: &[u8]) -> u32 {
 /// ```rust,no_run
 /// # async fn demo() -> anyhow::Result<()> {
 /// use rustpulse::adapters::input::http::telemetry_handler;
-/// use rustpulse::core::application::telemetry::TelemetryQueryCase;
+/// use rustpulse::core::application::TelemetryQueryCase;
 /// use rustpulse::core::domains::telemetry::Telemetry;
 /// use std::sync::Arc;
 ///
@@ -281,7 +281,7 @@ pub async fn fetch_telemetry_handler(
 
 #[cfg(test)]
 mod ingest_crc_tests {
-    use crate::core::application::telemetry::TelemetryIngestCase;
+    use crate::core::application::TelemetryIngestCase;
     use crate::core::domains::telemetry::Telemetry;
 
     use async_trait::async_trait;

@@ -6,7 +6,7 @@ use sqlx::PgPool;
 use sqlx::Row;
 use uuid::Uuid;
 
-use crate::core::application::telemetry::TelemetryRepository;
+use crate::core::application::TelemetryRepository;
 use crate::core::domains::telemetry::Telemetry;
 
 #[derive(thiserror::Error, Debug)]

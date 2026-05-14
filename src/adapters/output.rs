@@ -1,5 +1,7 @@
 //! Adapter implementations for outbound dependencies (storage, databases, etc.).
 
+pub mod auth_jwt_issuer;
+pub mod auth_password_hasher;
 pub mod fault_injecting_repo;
 pub mod jsonl_repo;
 pub mod postgres_db;
