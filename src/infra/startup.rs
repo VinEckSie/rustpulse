@@ -37,6 +37,10 @@ pub enum InfraBootError {
     /// File or network I/O error.
     #[error(transparent)]
     Io(#[from] std::io::Error),
+
+    /// Postgres mode requires `database_url` to be present in configuration.
+    #[error("missing database url for postgres storage mode")]
+    MissingDatabaseUrl,
 }
 
 /// Runs embedded SQLx migrations against Postgres.
@@ -103,7 +107,7 @@ pub async fn build_telemetry_repository(
             let database_url = config
                 .database_url
                 .as_ref()
-                .expect("DATABASE_URL validated by Config::from_env");
+                .ok_or(InfraBootError::MissingDatabaseUrl)?;
             let pool = postgres_db::connect_pool(database_url).await?;
             init_postgres_schema(&pool).await?;
             Ok(Arc::new(PostgresTelemetryRepo::new(pool)))
